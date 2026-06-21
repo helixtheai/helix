@@ -2,17 +2,17 @@
 // and still launches (chat UI, settings, etc.) even with no internet.
 // Note: actual AI replies still need internet, since they call the Groq API.
 
-const CACHE_NAME = 'helix-cache-v5.9.1';
+const CACHE_NAME = 'helix-cache-v5.9.2';
 const ASSETS_TO_CACHE = [
   './index.html',
   './manifest.json',
-  './icons/icon-16.png',
-  './icons/icon-32.png',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-192-maskable.png',
-  './icons/icon-512.png',
-  './icons/icon-512-maskable.png'
+  './icon-16.png',
+  './icon-32.png',
+  './icon-180.png',
+  './icon-192.png',
+  './icon-192-maskable.png',
+  './icon-512.png',
+  './icon-512-maskable.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -46,7 +46,6 @@ self.addEventListener('fetch', (event) => {
       if (cached) return cached;
       return fetch(event.request)
         .then((response) => {
-          // Cache a copy of newly-fetched same-origin assets for next time
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
           return response;
