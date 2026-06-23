@@ -625,31 +625,10 @@ body.dark #logo-txt h1,body.dark .login-title,body.dark #ph h2{color:#e7eaee;}
 <!-- VOICE -->
 <div class="pn" id="p-voice">
   <div id="vp">
-    <div id="vorb" onclick="toggleVF()">
-      <svg width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:2;">
-        <defs>
-          <radialGradient id="vBg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8f0ff"/><stop offset="100%" stop-color="#f0ebff"/></radialGradient>
-          <linearGradient id="vG1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0072c6"/><stop offset="50%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#00a86b"/></linearGradient>
-          <linearGradient id="vG2" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#00a86b"/><stop offset="100%" stop-color="#0072c6"/></linearGradient>
-          <filter id="vBlur2"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          <clipPath id="vClip2"><circle cx="50" cy="50" r="43"/></clipPath>
-        </defs>
-        <circle cx="50" cy="50" r="46" fill="url(#vBg2)" stroke="url(#vG1)" stroke-width="1.5" opacity="0.9"/>
-        <g class="hx-spin"><circle cx="50" cy="50" r="44" fill="none" stroke="url(#vG1)" stroke-width="1.2" stroke-dasharray="14 22" opacity="0.5"/></g>
-        <g clip-path="url(#vClip2)" filter="url(#vBlur2)">
-          <path d="M 24,18 C 34,28 66,36 76,46 C 66,56 34,64 24,74 C 34,84 66,92 76,102" fill="none" stroke="url(#vG1)" stroke-width="4" stroke-linecap="round"/>
-          <path d="M 76,18 C 66,28 34,36 24,46 C 34,56 66,64 76,74 C 66,84 34,92 24,102" fill="none" stroke="url(#vG2)" stroke-width="4" stroke-linecap="round"/>
-          <line x1="24" y1="46" x2="76" y2="46" stroke="rgba(0,168,107,0.6)" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="24" y1="74" x2="76" y2="74" stroke="rgba(0,114,198,0.55)" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="34" y1="25" x2="66" y2="25" stroke="rgba(124,58,237,0.4)" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="24" cy="46" r="4.5" fill="#0072c6" id="vei" opacity="0.95"/>
-          <circle cx="76" cy="46" r="4.5" fill="#7c3aed" opacity="0.95"/>
-          <circle cx="24" cy="74" r="4.5" fill="#00a86b" opacity="0.95"/>
-          <circle cx="76" cy="74" r="4.5" fill="#0072c6" opacity="0.95"/>
-          <circle cx="50" cy="35.5" r="3.5" fill="url(#vG1)" opacity="0.85"/>
-          <circle cx="50" cy="56.5" r="3.5" fill="url(#vG2)" opacity="0.85"/>
-        </g>
-      </svg>
+    <div id="vorb" onclick="toggleVF()" style="position:relative;display:flex;align-items:center;justify-content:center;">
+      <div class="hxbw-ring" style="width:120px;height:120px;position:absolute;"></div>
+      <div class="hxbw-ring" style="width:120px;height:120px;position:absolute;animation-delay:.65s;"></div>
+      <svg class="hxbw-icon hxbw-breathe" width="120" height="120" viewBox="0 0 100 100" style="position:relative;z-index:2;"><use href="#hx-logo-bw" xlink:href="#hx-logo-bw"/></svg>
     </div>
     <div id="vst">Click orb to activate HELIX Voice</div>
     <div class="vst-info">Speak in English or Nepali — HELIX will listen and respond automatically</div>
@@ -1196,7 +1175,7 @@ async function genImg(){
   // Use Pollinations.ai — free, no API key needed, high quality
   const encoded=encodeURIComponent(fullPrompt);
   const seed=Math.floor(Math.random()*999999);
-  const url=`https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&seed=${seed}&nologo=true&enhance=true`;
+  const url=`https://gen.pollinations.ai/image/${encoded}?model=flux&width=${w}&height=${h}&seed=${seed}&nologo=true`;
   showToast('🎨 Generating your image...');
   const img=document.getElementById('gen-img');
   if(img){
