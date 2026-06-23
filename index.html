@@ -116,6 +116,9 @@ footer .flag{color:var(--flag);}
 }
 @media (prefers-reduced-motion:reduce){.hxbw-breathe,.hxbw-ring{animation:none;}}
 </style>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 </head>
 <body>
 
@@ -313,6 +316,22 @@ footer .flag{color:var(--flag);}
   <p>HELIX v5.9 · Designed &amp; built by Pritam BK <span class="flag">●</span> Nepal</p>
 </footer>
 
+<script>
+// This homepage must never be served from a cached service worker.
+// Some visitors may have an old service worker registered from an earlier
+// version of this site — find and remove it so everyone always gets the
+// current live page, with no manual hard-refresh needed.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs) {
+    regs.forEach(function(reg) { reg.unregister(); });
+  });
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      names.forEach(function(name) { caches.delete(name); });
+    });
+  }
+}
+</script>
 <script>
 (function(){
   const isAndroid = /android/i.test(navigator.userAgent);
