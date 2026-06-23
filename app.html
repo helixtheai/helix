@@ -346,8 +346,16 @@ code{background:rgba(0,114,198,0.08);padding:2px 6px;border-radius:4px;font-size
 /* ═══ LOGIN SCREEN ═══ */
 #login-screen{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(244,247,251,0.97);backdrop-filter:blur(10px);padding:20px;transition:opacity .5s ease,visibility .5s;}
 #login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-.login-card{background:#fff;border:1px solid var(--bds);border-radius:24px;padding:40px 36px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.12);animation:loginIn .5s cubic-bezier(.34,1.2,.64,1);}
-@keyframes loginIn{from{opacity:0;transform:translateY(16px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.login-card{background:#fff;border:1px solid var(--bds);border-radius:24px;padding:40px 36px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.12);animation:loginIn .7s cubic-bezier(.22,1,.36,1);}
+@keyframes loginIn{from{opacity:0;transform:translateY(28px) scale(.94);filter:blur(4px);}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}}
+.login-card>*{opacity:0;animation:loginItemIn .5s cubic-bezier(.22,1,.36,1) both;}
+.login-card>*:nth-child(1){animation-delay:.1s;}
+.login-card>*:nth-child(2){animation-delay:.2s;}
+.login-card>*:nth-child(3){animation-delay:.3s;}
+.login-card>*:nth-child(4){animation-delay:.4s;}
+@keyframes loginItemIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.login-logo-glow{animation:hxbwBreathe 3.2s ease-in-out infinite, loginGlow 3.2s ease-in-out infinite;}
+@keyframes loginGlow{0%,100%{filter:drop-shadow(0 0 0px rgba(0,114,198,0));}50%{filter:drop-shadow(0 0 12px rgba(0,114,198,0.25));}}
 #login-orb{width:88px;height:88px;position:relative;margin:0 auto 18px;}
 #login-orb .ph-orb-core{width:88px;height:88px;}
 #login-orb .ph-orb-core svg{width:48px;height:48px;}
@@ -362,7 +370,10 @@ code{background:rgba(0,114,198,0.08);padding:2px 6px;border-radius:4px;font-size
 @keyframes orbitDotSm{0%{transform:rotate(0deg) translateX(54px) translateY(-3px);}100%{transform:rotate(360deg) translateX(54px) translateY(-3px);}}
 .login-title{font-size:26px;font-weight:900;letter-spacing:7px;color:#111111;margin-bottom:6px;}
 .login-sub{font-size:11.5px;color:var(--t2);margin-bottom:30px;letter-spacing:.3px;}
-.oauth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border-radius:12px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s;margin-bottom:11px;font-family:'Inter',sans-serif;}
+.oauth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border-radius:12px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s;margin-bottom:11px;font-family:'Inter',sans-serif;position:relative;overflow:hidden;}
+.oauth-btn::before{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(115deg, transparent, rgba(255,255,255,0.4), transparent);transform:skewX(-20deg);transition:left .5s ease;pointer-events:none;}
+.oauth-btn:hover::before{left:130%;}
+.oauth-btn:hover{transform:translateY(-2px);}
 .google-btn{background:#fff;border:1.5px solid #dadce0;color:#3c4043;}
 .google-btn:hover{box-shadow:0 2px 10px rgba(0,0,0,0.1);border-color:#c6c9cd;}
 .fb-btn{background:#1877F2;border:1.5px solid #1877F2;color:#fff;}
@@ -459,6 +470,8 @@ body.dark .google-btn{background:#fff;}
 body.dark #bdark.on{border-color:var(--gold);color:var(--gold);background:rgba(217,119,6,0.1);}
 body.dark #logo-txt h1,body.dark .login-title,body.dark #ph h2{color:#e7eaee;}
 </style>
+<!-- Real sign-in SDKs — both free, no backend required -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -512,7 +525,7 @@ body.dark #logo-txt h1,body.dark .login-title,body.dark #ph h2{color:#e7eaee;}
   <div class="login-card">
     <!-- HELIX monochrome logo for login -->
     <div style="position:relative;width:92px;height:92px;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;">
-      <svg class="hxbw-icon hxbw-breathe" width="92" height="92" viewBox="0 0 100 100"><use href="#hx-logo-bw"/></svg>
+      <svg class="hxbw-icon login-logo-glow" width="92" height="92" viewBox="0 0 100 100"><use href="#hx-logo-bw"/></svg>
     </div>
     <h1 class="login-title">H.E.L.I.X</h1>
     <p class="login-sub">Your advanced AI assistant · by Pritam BK</p>
@@ -522,15 +535,7 @@ body.dark #logo-txt h1,body.dark .login-title,body.dark #ph h2{color:#e7eaee;}
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.5-2.1 14.3-5.6l-6.6-5.6C29.6 34.6 26.9 36 24 36c-5.3 0-9.7-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.8l6.6 5.6C39.9 37.5 44 31.4 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
         Continue with Google
       </button>
-      <button class="oauth-btn fb-btn" onclick="startOAuth('facebook')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Continue with Facebook
-      </button>
-      <div class="login-divider"><span>or</span></div>
-      <button class="oauth-btn name-btn" onclick="showNameStep()">
-        ✏️ Continue with your name
-      </button>
-      <p class="login-note">Google / Facebook sign-in will activate once HELIX is hosted on a live domain. For now, sign in with your name to get started.</p>
+      <p class="login-note">Sign in with Google to get started.</p>
     </div>
 
     <div id="login-step2" style="display:none;">
@@ -920,12 +925,88 @@ function updateUserBadge(){
   }
 }
 
+/* ═══ REAL SIGN-IN ═══
+   Google: uses Google Identity Services — needs a free Client ID from
+   https://console.cloud.google.com/apis/credentials (Create Credentials →
+   OAuth client ID → Web application → add this site's URL as an
+   "Authorized JavaScript origin"). Paste it below.
+   Facebook: uses the Facebook JS SDK — needs a free App ID from
+   https://developers.facebook.com/apps (Create App → Consumer →
+   add "Facebook Login" product → add this site's domain). Paste it below.
+   Until real IDs are filled in, both fall back to name-entry automatically. */
+const GOOGLE_CLIENT_ID='705676823507-jblibbn1iqrc7qtsqpn43evav9m96tng.apps.googleusercontent.com';
+const FACEBOOK_APP_ID='YOUR_FACEBOOK_APP_ID_HERE';
+
 function startOAuth(provider){
-  // Real OAuth requires a hosted domain + registered app with Google/Facebook.
-  // For now, this captures the name; once hosted, replace this with real OAuth redirect logic.
-  showToast(provider==='google'?'🔵 Google sign-in will activate once HELIX is hosted live':'🔷 Facebook sign-in will activate once HELIX is hosted live',3200);
-  document.getElementById('login-greeting').textContent="What's your name?";
-  showNameStep();
+  if(provider==='google')startGoogleLogin();
+  else startFacebookLogin();
+}
+
+function startGoogleLogin(){
+  if(GOOGLE_CLIENT_ID.indexOf('YOUR_GOOGLE')===0||typeof google==='undefined'){
+    showToast('🔵 Google sign-in needs setup — using name entry for now',3200);
+    document.getElementById('login-greeting').textContent="What's your name?";
+    showNameStep();
+    return;
+  }
+  try{
+    google.accounts.id.initialize({
+      client_id:GOOGLE_CLIENT_ID,
+      callback:handleGoogleCredential
+    });
+    google.accounts.id.prompt();
+  }catch(e){
+    showToast('⚠️ Google sign-in failed, try name entry instead',3000);
+    showNameStep();
+  }
+}
+function handleGoogleCredential(response){
+  try{
+    const payload=JSON.parse(atob(response.credential.split('.')[1]));
+    const name=payload.given_name||payload.name||'Friend';
+    setUserName(name);
+    updateUserBadge();
+    document.getElementById('login-screen').classList.add('hidden');
+    showToast(`${getGreetingTime()}, ${name}! 👋`,3000);
+    refreshWelcomeScreen();
+  }catch(e){
+    showToast('⚠️ Could not read Google profile, try name entry',3000);
+    showNameStep();
+  }
+}
+
+function startFacebookLogin(){
+  if(FACEBOOK_APP_ID.indexOf('YOUR_FACEBOOK')===0){
+    showToast('🔷 Facebook sign-in needs setup — using name entry for now',3200);
+    document.getElementById('login-greeting').textContent="What's your name?";
+    showNameStep();
+    return;
+  }
+  function doLogin(){
+    FB.login(function(resp){
+      if(resp.authResponse){
+        FB.api('/me',{fields:'first_name,name'},function(profile){
+          const name=profile.first_name||profile.name||'Friend';
+          setUserName(name);
+          updateUserBadge();
+          document.getElementById('login-screen').classList.add('hidden');
+          showToast(`${getGreetingTime()}, ${name}! 👋`,3000);
+          refreshWelcomeScreen();
+        });
+      }else{
+        showToast('Facebook sign-in cancelled',2500);
+      }
+    },{scope:'public_profile'});
+  }
+  if(typeof FB!=='undefined'){doLogin();return;}
+  window.fbAsyncInit=function(){
+    FB.init({appId:FACEBOOK_APP_ID,cookie:true,xfbml:false,version:'v19.0'});
+    doLogin();
+  };
+  const s=document.createElement('script');
+  s.src='https://connect.facebook.net/en_US/sdk.js';
+  s.async=true;
+  document.body.appendChild(s);
 }
 function showNameStep(){
   document.getElementById('login-step1').style.display='none';
@@ -1344,7 +1425,7 @@ function hideT(){const t=document.getElementById('tp');if(t)t.remove();}
 function callAPI(msgs,_isFallback){
   const key=gk();
   if(!key){sw('settings');showToast('⚠️ Please add API key in Settings!');return Promise.resolve(null);}
-  const model=_isFallback?'llama-3.3-70b-versatile':'openai/gpt-oss-120b';
+  const model=_isFallback?'openai/gpt-oss-120b':'groq/compound';
   return new Promise(res=>{
     const x=new XMLHttpRequest();
     currentXHR=x;
@@ -1423,7 +1504,7 @@ async function sendMsg(){
       x.onerror=()=>{currentXHR=null;res('Sorry, connection error.');};
       x.ontimeout=()=>{currentXHR=null;res('Sorry, timed out.');};
       x.onabort=()=>{currentXHR=null;res(null);};
-      x.send(JSON.stringify({model:'llama-3.2-11b-vision-preview',max_tokens:800,messages:[{role:'system',content:buildSys()},{role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+imgData,detail:'high'}}]}]}));
+      x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:800,messages:[{role:'system',content:buildSys()},{role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+imgData,detail:'high'}}]}]}));
     });
     setGenerating(false);
     hideT();
@@ -1737,10 +1818,10 @@ async function anaImg(){
     x.setRequestHeader('Content-Type','application/json');
     x.setRequestHeader('Authorization','Bearer '+key);
     x.timeout=22000;
-    x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));res(d.choices[0].message.content);}catch(e){res('Analysis error: '+e.message+'. Make sure your Groq API key supports vision models (llama-3.2-11b-vision-preview).');}};
+    x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));res(d.choices[0].message.content);}catch(e){res('Analysis error: '+e.message+'. Make sure your Groq API key supports vision models (meta-llama/llama-4-scout-17b-16e-instruct).');}};
     x.onerror=()=>res('Sorry, connection error during image analysis.');
     x.ontimeout=()=>res('Sorry, image analysis timed out. Try a smaller image.');
-    x.send(JSON.stringify({model:'llama-3.2-11b-vision-preview',max_tokens:900,messages:[{role:'system',content:'You are HELIX AI image analyzer, created by Pritam Bishwokarma. Analyze images thoroughly and respond in detail, in a natural conversational tone. The user\'s name is '+(getUserName()||'friend')+'.'},
+    x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:900,messages:[{role:'system',content:'You are HELIX AI image analyzer, created by Pritam Bishwokarma. Analyze images thoroughly and respond in detail, in a natural conversational tone. The user\'s name is '+(getUserName()||'friend')+'.'},
     {role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+imgB64,detail:'high'}}]}]}));
   });
   if(irs){irs.style.display='block';irs.innerHTML=render(r);}
@@ -1792,7 +1873,7 @@ async function analyzeCrop(){
     x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));resolve(d.choices[0].message.content);}catch(e){resolve('Diagnosis error: '+e.message);}};
     x.onerror=()=>resolve('Connection error during crop analysis.');
     x.ontimeout=()=>resolve('Analysis timed out — try a smaller/clearer photo.');
-    x.send(JSON.stringify({model:'llama-3.2-11b-vision-preview',max_tokens:900,messages:[{role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+cropB64,detail:'high'}}]}]}));
+    x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:900,messages:[{role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+cropB64,detail:'high'}}]}]}));
   });
   if(res)res.innerHTML=render(r);
   if(btn){btn.textContent='🔬 Diagnose Crop';btn.disabled=false;}
@@ -1843,7 +1924,7 @@ async function analyzeDoc(){
       x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));resolve(d.choices[0].message.content);}catch(e){resolve('Analysis error: '+e.message);}};
       x.onerror=()=>resolve('Connection error.');
       x.ontimeout=()=>resolve('Timed out — try a smaller file.');
-      x.send(JSON.stringify({model:'llama-3.2-11b-vision-preview',max_tokens:900,messages:[{role:'user',content:[{type:'text',text:context},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+docFile,detail:'high'}}]}]}));
+      x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:900,messages:[{role:'user',content:[{type:'text',text:context},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+docFile,detail:'high'}}]}]}));
     });
   }else{
     r=await callAPI([{role:'user',content:`${context}\n\nDocument content:\n${docFile}`}]);
