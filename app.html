@@ -1241,6 +1241,24 @@ function imgTabSw(tab,el){document.querySelectorAll('.img-tab').forEach(t=>t.cla
 
 /* ═══ IMAGE GEN ═══ */
 let genActive=false;
+  function isImageGenRequest(t){
+  const tl=t.toLowerCase();
+  if(/\b(generate|create|draw|make|paint|design|render)\b[^.!?]{0,40}\b(image|picture|photo|photograph|art|artwork|drawing|painting|illustration|wallpaper|logo|icon|graphic)\b/.test(tl))return true;
+  if(/\b(image|picture|photo|photograph|artwork|illustration|wallpaper|shot|scene|portrait)\s+of\b/.test(tl))return true;
+  return false;
+}
+function genImgFromChat(promptText){
+  return new Promise(res=>{
+    const fullPrompt=promptText.substring(0,400);
+    const encoded=encodeURIComponent(fullPrompt);
+    const seed=Math.floor(Math.random()*999999);
+    const url=`https://gen.pollinations.ai/image/${encoded}?model=flux&width=1024&height=1024&seed=${seed}&nologo=true`;
+    const img=new Image();
+    img.onload=()=>res({ok:true,url});
+    img.onerror=()=>res({ok:false,url});
+    img.src=url;
+  });
+}
 function selStyle(el,s){document.querySelectorAll('.sc').forEach(x=>x.className='sc');el.className='sc on';imgStyle=s;}
 function selSize(el,s){document.querySelectorAll('.sz').forEach(x=>x.className='sz');el.className='sz on';imgSize=s;}
 function copyImgPrompt(){const p=document.getElementById('gprompt');if(p&&p.value){navigator.clipboard&&navigator.clipboard.writeText(p.value);showToast('📋 Prompt copied!');}}
@@ -1478,7 +1496,24 @@ async function sendMsg(){
   if(attImgs.length)disp+='\n'+attImgs.map(f=>'🖼 '+f.name).join('\n');
   const uDiv=addMsg('u',disp,'u');
   if(uDiv)msgRawText.set(uDiv,text);
-
+if(text&&!attImgs.length&&isImageGenRequest(text)){
+    addMsg('sys','🎨 Generating your image...','sys');
+    showT();setGenerating(true);
+    const{ok,url}=await genImgFromChat(text);
+    setGenerating(false);hideT();
+    if(ok){
+      const html=`<img src="${url}" alt="${esc(text)}" style="max-width:100%;border-radius:12px;margin-bottom:8px;display:block;"/><a href="${url}" download="helix-image.png" target="_blank" style="font-size:12px;">⬇️ Download full size</a>`;
+      hist.push({role:'user',content:text});
+      hist.push({role:'assistant',content:'[Generated an image based on: '+text+']'});
+      if(uDiv)msgRefs.set(uDiv,hist[hist.length-2]);
+      if(hist.length>20)hist=hist.slice(-12);
+      addMsg('h',html,'h');sfxR();saveRec(text);
+    }else{
+      addMsg('h','Sorry, image generation failed — try a simpler description, or use the **Image AI** tab for more control over style and size.','h');
+    }
+    att=[];attImgs=[];const ap=document.getElementById('ap');if(ap)ap.innerHTML='';
+    return;
+  }
   if(text){const mr=tryMath(text);if(mr!==null){const reply=`Here is the precise calculation:\n\n**${text} = ${mr}**\n\n✅ 100% precise result!`;addMsg('h',reply,'h');sfxR();speak(reply);hist.push({role:'user',content:text});if(uDiv)msgRefs.set(uDiv,hist[hist.length-1]);hist.push({role:'assistant',content:reply});if(hist.length>20)hist=hist.slice(-12);saveRec(text);att=[];attImgs=[];const ap=document.getElementById('ap');if(ap)ap.innerHTML='';return;}}
 
   if(attImgs.length){
