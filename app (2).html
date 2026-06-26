@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover"/>
+<title>HELIX 5.9 — by Pritam BK</title>
+
+<!-- ═══ PWA: installable app config ═══ -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#111111"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="HELIX"/>
+<link rel="apple-touch-icon" href="icons/icon-180.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png"/>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f4f7fb;--bg2:#edf1f8;--bg3:#e2e8f4;
+  --c:#0072c6;--g:#00a86b;--p:#7c3aed;--r:#dc2626;--gold:#d97706;
+  --tx:#111827;--t2:#4b5563;--t3:#9ca3af;
+  --bd:rgba(0,114,198,0.15);
+  --bds:rgba(0,0,0,0.07);
+  --glow:0 0 18px rgba(0,114,198,0.22);
+  --pglow:0 0 18px rgba(124,58,237,0.22);
+  --card:#ffffff;--card2:#f9fbff;
+}
+/* ═══ BG LAYERS ═══ */
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;}
+
+/* ═══ NEW HELIX LOGO MARK ═══ */
+#logo-mark{position:relative;width:44px;height:44px;flex-shrink:0;}
+.hx-mark{width:44px;height:44px;}
+.hx-mark-lg{width:72px;height:72px;}
+.hx-spin-ring{animation:hxSpin 8s linear infinite;transform-origin:50% 50%;}
+.hx-spin-ring2{animation:hxSpin 14s linear infinite reverse;transform-origin:50% 50%;}
+@keyframes hxSpin{to{transform:rotate(360deg);}}
+@keyframes hxPulseGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(0,114,198,0.5));}50%{filter:drop-shadow(0 0 16px rgba(0,114,198,0.9)) drop-shadow(0 0 32px rgba(124,58,237,0.4));}}
+.hx-logo-glow{animation:hxPulseGlow 3s ease-in-out infinite;}
+
+/* ═══ NEW MONOCHROME HX LOGO — breathing + soft rings ═══ */
+.hxbw-icon{display:block;}
+.hxbw-breathe{animation:hxbwBreathe 3.6s ease-in-out infinite;}
+@keyframes hxbwBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+.hxbw-ring{position:absolute;top:0;left:0;border-radius:50%;border:1px solid rgba(17,17,17,0.1);animation:hxbwRing 2.8s ease-out infinite;}
+@keyframes hxbwRing{0%{opacity:.55;transform:scale(.82);}100%{opacity:0;transform:scale(1.3);}}
+
+/* ═══ INTRO SCREEN (Claude-style, monochrome) ═══ */
+#intro-screen{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:#fafafa;flex-direction:column;gap:0;}
+#intro-screen.fade-out{animation:introFadeOut .8s ease forwards;}
+@keyframes introFadeOut{to{opacity:0;transform:scale(1.04);pointer-events:none;}}
+#intro-screen.hidden{display:none;}
+.intro-logo-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;animation:introLogoIn .7s cubic-bezier(.22,1,.36,1) both;}
+@keyframes introLogoIn{from{opacity:0;transform:scale(.78);}to{opacity:1;transform:scale(1);}}
+.intro-text{font-size:30px;font-weight:800;letter-spacing:10px;color:#111111;animation:introTextIn .6s .35s ease both;margin-top:26px;}
+@keyframes introTextIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.intro-sub{font-size:10px;color:#9ca3af;letter-spacing:5px;text-transform:uppercase;animation:introTextIn .6s .55s ease both;margin-top:10px;}
+.intro-bar-wrap{padding:5px 16px;border:1px solid #d1d5db;border-radius:20px;margin-top:20px;animation:introTextIn .6s .75s ease both;}
+.intro-bar{font-size:10px;letter-spacing:3px;color:#6b7280;}
+
+/* ═══ WELCOME ORB — new style ═══ */
+#ph-orb{width:160px;height:160px;position:relative;margin:0 auto 32px;}
+.ph-helix-core{width:160px;height:160px;border-radius:50%;background:linear-gradient(145deg,#eef5ff,#f0ebff);border:1.5px solid rgba(0,114,198,0.2);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 50px rgba(0,114,198,0.12),0 0 100px rgba(124,58,237,0.06);animation:phCorePulse 4s ease-in-out infinite;}
+@keyframes phCorePulse{0%,100%{box-shadow:0 0 50px rgba(0,114,198,0.12),0 0 100px rgba(124,58,237,0.06);}50%{box-shadow:0 0 80px rgba(0,114,198,0.22),0 0 140px rgba(124,58,237,0.1),0 0 200px rgba(0,168,107,0.06);}}
+.ph-helix-core::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,114,198,0.08),rgba(124,58,237,0.06),rgba(0,168,107,0.05),rgba(0,114,198,0.08));animation:orbCoreSpin 10s linear infinite;}
+.ph-orbit-ring{position:absolute;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);}
+.ph-orbit-ring1{width:200px;height:200px;border:1px solid rgba(0,114,198,0.1);animation:eyeRing 9s linear infinite;}
+.ph-orbit-ring2{width:246px;height:246px;border:1px solid rgba(124,58,237,0.07);animation:eyeRing 15s linear infinite reverse;}
+.ph-orbit-ring3{width:296px;height:296px;border:1px dashed rgba(0,168,107,0.05);animation:eyeRing 22s linear infinite;}
+.ph-orbit-dot{position:absolute;width:7px;height:7px;border-radius:50%;top:50%;left:50%;transform-origin:0 0;}
+.ph-orbit-dot1{background:var(--c);box-shadow:0 0 8px var(--c);animation:orbitDot 9s linear infinite;}
+.ph-orbit-dot2{background:var(--p);box-shadow:0 0 8px var(--p);animation:orbitDot 15s linear infinite reverse;animation-delay:-5s;}
+.ph-orbit-dot3{background:var(--g);box-shadow:0 0 7px var(--g);animation:orbitDot 22s linear infinite;animation-delay:-9s;}
+
+/* ═══ VOICE ORB — new ═══ */
+#vorb{width:180px;height:180px;border-radius:50%;background:linear-gradient(145deg,#eef5ff,#f0ebff);border:2px solid rgba(0,114,198,0.22);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .5s;position:relative;box-shadow:0 0 50px rgba(0,114,198,0.1);}
+#vorb::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,114,198,0.08),rgba(124,58,237,0.06),rgba(0,168,107,0.05),rgba(0,114,198,0.08));animation:orbCoreSpin 10s linear infinite;border-radius:50%;}
+#vorb svg{position:relative;z-index:2;width:90px;height:90px;}
+
+/* old orb-core compat */
+.ph-orb-core{display:none;}
+.orb-ring,.orb-dot{display:none;}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.aurora::before{content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;
+  background:conic-gradient(from 0deg at 30% 40%,transparent 0deg,rgba(0,114,198,0.03) 60deg,transparent 120deg,rgba(124,58,237,0.02) 200deg,transparent 260deg,rgba(0,168,107,0.015) 320deg,transparent 360deg);
+  animation:auroraRot 28s linear infinite;}
+.aurora::after{content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;
+  background:conic-gradient(from 180deg at 70% 60%,transparent 0deg,rgba(0,168,107,0.02) 80deg,transparent 140deg,rgba(0,114,198,0.015) 220deg,transparent 280deg,rgba(124,58,237,0.015) 340deg,transparent 360deg);
+  animation:auroraRot 38s linear infinite reverse;}
+@keyframes auroraRot{to{transform:rotate(360deg);}}
+.orb-bg{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;animation:orbFloat linear infinite;}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,rgba(0,114,198,0.06),transparent 70%);top:-150px;left:-150px;animation-duration:22s;}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.05),transparent 70%);bottom:-100px;right:-100px;animation-duration:28s;animation-direction:reverse;}
+.orb3{width:400px;height:400px;background:radial-gradient(circle,rgba(0,168,107,0.035),transparent 70%);top:35%;left:35%;animation-duration:32s;}
+@keyframes orbFloat{0%{transform:translate(0,0);}25%{transform:translate(50px,-35px);}50%{transform:translate(-25px,55px);}75%{transform:translate(-55px,-25px);}100%{transform:translate(0,0);}}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,114,198,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,114,198,0.04) 1px,transparent 1px);background-size:48px 48px;z-index:0;pointer-events:none;animation:gridMove 28s linear infinite;}
+@keyframes gridMove{to{background-position:48px 48px;}}
+.scan{position:fixed;top:-3px;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent 15%,rgba(0,114,198,0.5) 50%,transparent 85%);z-index:1;pointer-events:none;animation:scan 10s linear infinite;filter:blur(0.5px);}
+.scan2{position:fixed;top:-3px;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.3) 50%,transparent);z-index:1;pointer-events:none;animation:scan 10s linear infinite;animation-delay:5s;}
+@keyframes scan{to{top:100vh;}}
+#cursor-glow{position:fixed;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(0,114,198,0.05),transparent 70%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);top:50%;left:50%;transition:left .12s ease,top .12s ease;}
+
+/* ═══ SHELL ═══ */
+#app{position:relative;z-index:2;display:flex;flex-direction:column;height:100vh;max-width:960px;margin:0 auto;width:100%;}
+
+/* ═══ HEADER ═══ */
+#hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 22px;border-bottom:1px solid var(--bds);background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);flex-shrink:0;position:relative;box-shadow:0 1px 8px rgba(0,0,0,0.05);}
+#hdr::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,114,198,0.4),rgba(124,58,237,0.25),transparent);border-radius:2px;animation:hdrGlow 4s ease-in-out infinite;}
+@keyframes hdrGlow{0%,100%{opacity:0.5;}50%{opacity:1;}}
+#logo{display:flex;align-items:center;gap:14px;cursor:default;}
+#logo-eye{position:relative;width:44px;height:44px;}
+#logo-eye svg{width:44px;height:44px;filter:drop-shadow(0 0 8px rgba(0,114,198,0.5));}
+.eye-ring{position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(0,114,198,0.2);animation:eyeRing 4s linear infinite;}
+.eye-ring2{position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(0,114,198,0.1);animation:eyeRing 7s linear infinite reverse;}
+.eye-ring3{position:absolute;inset:-21px;border-radius:50%;border:1px dashed rgba(0,114,198,0.05);animation:eyeRing 12s linear infinite;}
+@keyframes eyeRing{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+#logo-txt h1{font-size:22px;font-weight:900;letter-spacing:8px;color:#111111;}
+@keyframes logoGrad{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+#logo-txt p{font-size:9px;color:var(--t2);letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
+#hdr-right{display:flex;align-items:center;gap:8px;}
+.hbtn{padding:7px 14px;border:1px solid var(--bds);border-radius:20px;background:rgba(0,114,198,0.04);color:var(--t2);font-size:11px;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;letter-spacing:.3px;}
+.hbtn:hover{border-color:var(--c);color:var(--c);background:rgba(0,114,198,0.08);box-shadow:var(--glow);}
+.hbtn.on{border-color:var(--g);color:var(--g);background:rgba(0,168,107,0.07);}
+#sdot{width:8px;height:8px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(.82);}}
+
+/* ═══ TABS ═══ */
+#tabs{display:flex;padding:0 16px;border-bottom:1px solid var(--bds);background:rgba(255,255,255,0.88);flex-shrink:0;gap:2px;overflow-x:auto;}
+#tabs::-webkit-scrollbar{display:none;}
+.tb{padding:12px 16px;font-size:11px;font-weight:500;cursor:pointer;color:var(--t2);border-bottom:2px solid transparent;transition:all .3s;white-space:nowrap;letter-spacing:.3px;}
+.tb:hover{color:var(--tx);}
+.tb.on{color:var(--c);border-bottom-color:var(--c);}
+
+/* ═══ PANELS ═══ */
+#panels{flex:1;overflow:hidden;}
+.pn{display:none;height:100%;flex-direction:column;animation:panelIn .3s cubic-bezier(.34,1.2,.64,1);}
+@keyframes panelIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.pn.on{display:flex;}
+
+/* ═══ CHAT ═══ */
+#log{flex:1;overflow-y:auto;padding:22px;scroll-behavior:smooth;}
+#log::-webkit-scrollbar{width:4px;}
+#log::-webkit-scrollbar-thumb{background:rgba(0,114,198,0.15);border-radius:2px;}
+
+/* Welcome */
+#ph{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65vh;text-align:center;padding:20px;}
+#ph-orb{width:180px;height:180px;position:relative;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;}
+#ph h2{font-size:32px;font-weight:900;letter-spacing:8px;color:#111111;margin-bottom:8px;}
+#ph .sub{font-size:10px;color:var(--t2);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:560px;}
+.chip{padding:11px 18px;background:#fff;border:1px solid var(--bds);border-radius:24px;font-size:12px;color:var(--t2);cursor:pointer;transition:all .3s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.chip:hover{border-color:var(--c);color:var(--tx);background:#f0f7ff;box-shadow:var(--glow),0 4px 16px rgba(0,114,198,0.08);transform:translateY(-2px) scale(1.02);}
+.chip-icon{font-size:15px;}
+
+/* ═══ HELIX LOGO CORE — shared across all locations ═══ */
+.hx-logo-svg{overflow:visible;}
+@keyframes hxStrand1{0%,100%{d:path("M 20,15 C 35,25 55,35 70,45 C 55,55 35,65 20,75");}50%{d:path("M 20,15 C 5,25 25,35 40,45 C 25,55 5,65 20,75");}}
+@keyframes hxOrbit{to{transform:rotate(360deg);transform-origin:50% 50%;}}
+@keyframes hxGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(0,114,198,0.6)) drop-shadow(0 0 20px rgba(124,58,237,0.3));}50%{filter:drop-shadow(0 0 16px rgba(0,114,198,0.9)) drop-shadow(0 0 40px rgba(124,58,237,0.5)) drop-shadow(0 0 60px rgba(0,168,107,0.2));}}
+@keyframes hxPulseRing{0%{opacity:.6;r:46;}100%{opacity:0;r:64;}}
+.hx-pulse-ring{animation:hxPulseRing 2s ease-out infinite;}
+.hx-pulse-ring2{animation:hxPulseRing 2s ease-out infinite;animation-delay:.7s;}
+.hx-pulse-ring3{animation:hxPulseRing 2s ease-out infinite;animation-delay:1.4s;}
+.hx-spin{animation:hxOrbit 12s linear infinite;}
+.hx-spin-rev{animation:hxOrbit 18s linear infinite reverse;}
+.hx-glow-anim{animation:hxGlow 3s ease-in-out infinite;}
+
+/* Messages */
+.msg{margin-bottom:20px;animation:msgIn .4s cubic-bezier(.34,1.5,.64,1);}
+@keyframes msgIn{from{opacity:0;transform:translateY(12px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.mrow{display:flex;gap:12px;align-items:flex-start;}
+.mrow.u{flex-direction:row-reverse;}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;border:1.5px solid;flex-shrink:0;}
+.av.h{background:rgba(0,114,198,0.07);border-color:rgba(0,114,198,0.25);}
+.av.u{background:rgba(0,168,107,0.07);border-color:rgba(0,168,107,0.25);}
+.bbl{max-width:80%;padding:13px 17px;font-size:13.5px;line-height:1.8;word-break:break-word;}
+.bbl.h{background:#fff;border:1px solid var(--bds);border-radius:4px 18px 18px 18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);color:var(--tx);}
+.bbl.u{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid rgba(0,114,198,0.18);border-radius:18px 4px 18px 18px;color:var(--tx);}
+.bbl.sys{background:#fffbeb;border:1px solid rgba(217,119,6,0.2);border-radius:10px;font-size:12px;color:#92400e;max-width:100%;padding:9px 14px;}
+.mmeta{font-size:10px;color:var(--t3);margin-top:5px;padding:0 4px;display:flex;align-items:center;gap:6px;}
+.mrow.u .mmeta{justify-content:flex-end;}
+.mmeta-dot{width:3px;height:3px;border-radius:50%;background:var(--t3);}
+
+/* Typing */
+#tp.msg .typing-bbl{padding:14px 18px;background:#fff;border:1px solid var(--bds);border-radius:4px 18px 18px 18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.typing-dots{display:flex;gap:6px;align-items:center;}
+.tdt{width:9px;height:9px;border-radius:50%;animation:geminiPulse 1.6s ease-in-out infinite;}
+.tdt:nth-child(1){background:var(--c);animation-delay:0s;}
+.tdt:nth-child(2){background:var(--g);animation-delay:.22s;}
+.tdt:nth-child(3){background:var(--p);animation-delay:.44s;}
+@keyframes geminiPulse{0%,60%,100%{transform:scale(1) translateY(0);opacity:.4;}30%{transform:scale(1.5) translateY(-3px);opacity:1;}}
+
+/* Code */
+.cblk{background:#f8fafc;border:1px solid rgba(0,0,0,0.09);border-radius:12px;margin:10px 0;overflow:hidden;}
+.cblk-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#f1f5f9;border-bottom:1px solid rgba(0,0,0,0.07);}
+.cblk-lang{font-size:11px;color:var(--c);font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-weight:600;}
+.cblk-copy{padding:4px 10px;background:rgba(0,114,198,0.08);border:1px solid rgba(0,114,198,0.2);border-radius:6px;font-size:10px;color:var(--c);cursor:pointer;transition:all .2s;}
+.cblk-copy:hover{background:rgba(0,114,198,0.15);}
+.cblk-code{padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;overflow-x:auto;color:#1e3a5f;}
+code{background:rgba(0,114,198,0.08);padding:2px 6px;border-radius:4px;font-size:12px;color:#0072c6;font-family:'JetBrains Mono',monospace;}
+
+/* ═══ INPUT ═══ */
+#ia{padding:13px 20px 17px;background:rgba(255,255,255,0.94);border-top:1px solid var(--bds);flex-shrink:0;backdrop-filter:blur(20px);}
+#ap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.fc{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(0,114,198,0.07);border:1px solid rgba(0,114,198,0.18);border-radius:14px;font-size:11px;color:var(--c);}
+#ib{display:flex;gap:10px;align-items:flex-end;}
+#iw{flex:1;background:#f9fbff;border:1.5px solid rgba(0,114,198,0.18);border-radius:18px;display:flex;align-items:flex-end;gap:8px;padding:11px 15px;transition:all .3s;}
+#iw:focus-within{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,114,198,0.08);background:#fff;}
+#inp{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font-size:14px;font-family:'Inter',sans-serif;resize:none;max-height:120px;min-height:22px;line-height:1.6;}
+#inp::placeholder{color:var(--t3);}
+.ibt{width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,0,0,0.08);background:transparent;color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .25s;flex-shrink:0;}
+.ibt:hover{border-color:var(--c);color:var(--c);background:rgba(0,114,198,0.06);}
+.ibt.on{border-color:var(--r);color:var(--r);background:rgba(220,38,38,0.07);animation:micGlow 1.5s ease-in-out infinite;}
+@keyframes micGlow{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.2);}50%{box-shadow:0 0 0 6px rgba(220,38,38,0);}}
+#bsnd{width:46px;height:46px;border-radius:14px;border:none;background:linear-gradient(135deg,#0072c6,#0059a3);color:#fff;cursor:pointer;font-size:18px;transition:all .3s;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,114,198,0.3);}
+#bsnd:hover{transform:scale(1.08) translateY(-1px);box-shadow:0 6px 22px rgba(0,114,198,0.4);}
+#bsnd:active{transform:scale(.95);}
+#ih{font-size:10px;color:var(--t3);margin-top:8px;text-align:center;letter-spacing:.3px;}
+
+/* ═══ VOICE PANEL ═══ */
+#vp{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:18px;}
+/* vorb states */
+.vring{position:absolute;border-radius:50%;border:1px solid;top:50%;left:50%;transform:translate(-50%,-50%);}
+.vr1{width:210px;height:210px;border-color:rgba(0,114,198,0.1);animation:eyeRing 8s linear infinite;}
+.vr2{width:256px;height:256px;border-color:rgba(0,114,198,0.06);animation:eyeRing 14s linear infinite reverse;}
+.vr3{width:306px;height:306px;border-color:rgba(124,58,237,0.04);animation:eyeRing 20s linear infinite;}
+.vr4{width:360px;height:360px;border-color:rgba(0,114,198,0.025);border-style:dashed;animation:eyeRing 28s linear infinite reverse;}
+#vorb svg{position:relative;z-index:1;width:96px;height:96px;animation:eyeBlink 4s ease-in-out infinite;}
+#vorb.L{border-color:var(--g);box-shadow:0 0 50px rgba(0,168,107,0.3),0 0 90px rgba(0,168,107,0.12);}
+#vorb.S{border-color:var(--c);box-shadow:0 0 50px rgba(0,114,198,0.3),0 0 90px rgba(0,114,198,0.12);}
+#vorb.T{border-color:var(--p);box-shadow:0 0 50px rgba(124,58,237,0.3);}
+#vst{font-size:13px;color:var(--t2);letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.vst-info{font-size:11px;color:var(--t3);text-align:center;max-width:380px;line-height:1.6;}
+#vw{display:flex;align-items:center;gap:3px;height:44px;}
+.wb{width:3px;background:linear-gradient(to top,var(--c),rgba(0,114,198,0.2));border-radius:3px;height:5px;transition:height .07s ease;}
+#vlog{width:100%;max-width:520px;max-height:180px;overflow-y:auto;background:#fff;border:1px solid var(--bds);border-radius:14px;padding:14px;font-size:13px;line-height:1.85;box-shadow:0 2px 10px rgba(0,0,0,0.05);}
+#vbtn{padding:13px 40px;background:rgba(0,114,198,0.06);border:1.5px solid rgba(0,114,198,0.3);border-radius:30px;color:var(--c);font-size:13px;font-weight:600;cursor:pointer;letter-spacing:1.5px;transition:all .3s;text-transform:uppercase;font-family:'Inter',sans-serif;}
+#vbtn:hover{background:rgba(0,114,198,0.1);box-shadow:var(--glow);}
+#vbtn.on{border-color:var(--r);color:var(--r);background:rgba(220,38,38,0.06);}
+.vlang-sel{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.vlang-btn{padding:6px 14px;background:#fff;border:1px solid var(--bds);border-radius:16px;font-size:11px;color:var(--t2);cursor:pointer;transition:all .2s;font-weight:500;}
+.vlang-btn.on{border-color:var(--c);color:var(--c);background:rgba(0,114,198,0.06);}
+
+/* ═══ SHARED PANEL ═══ */
+.spanel{flex:1;overflow-y:auto;padding:22px;}
+.spanel::-webkit-scrollbar{width:4px;}
+.spanel::-webkit-scrollbar-thumb{background:rgba(0,114,198,0.12);border-radius:2px;}
+.spanel h2{font-size:13px;font-weight:700;color:var(--c);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.spanel h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,114,198,0.15),transparent);}
+.card{background:#fff;border:1px solid var(--bds);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+
+/* CALCULATOR */
+#ci{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.15);border-radius:12px;color:var(--tx);font-size:16px;padding:13px 16px;outline:none;font-family:'JetBrains Mono',monospace;margin-bottom:10px;transition:all .3s;}
+#ci:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,114,198,0.07);}
+#cr{background:#f0f7ff;border:1px solid rgba(0,114,198,0.15);border-radius:12px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--c);min-height:52px;margin-bottom:14px;word-break:break-all;transition:all .3s;font-weight:600;}
+.cg2{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+.cn{padding:14px;background:#f8fafc;border:1px solid var(--bds);border-radius:11px;color:var(--tx);font-size:15px;cursor:pointer;transition:all .18s;text-align:center;font-family:'JetBrains Mono',monospace;user-select:none;font-weight:500;}
+.cn:hover{background:#eff6ff;border-color:var(--c);color:var(--c);transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,114,198,0.1);}
+.cn:active{transform:scale(.93);}
+.cn.op{color:var(--gold);}
+.cn.eq{background:linear-gradient(135deg,rgba(0,114,198,0.1),rgba(0,114,198,0.04));border-color:rgba(0,114,198,0.3);color:var(--c);font-weight:700;}
+.cn.cl{color:var(--r);}
+.sfns{display:flex;gap:7px;flex-wrap:wrap;}
+.sf{flex:1;min-width:52px;padding:10px;background:#f8fafc;border:1px solid var(--bds);border-radius:9px;color:var(--t2);font-size:12px;cursor:pointer;transition:all .2s;text-align:center;font-family:'JetBrains Mono',monospace;}
+.sf:hover{border-color:var(--c);color:var(--c);background:#eff6ff;}
+
+/* CODE */
+.lg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.lb{padding:7px 14px;background:#fff;border:1px solid var(--bds);border-radius:20px;color:var(--t2);font-size:11px;cursor:pointer;transition:all .22s;font-weight:500;}
+.lb:hover,.lb.on{border-color:var(--c);color:var(--c);background:#eff6ff;}
+#cr2{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.14);border-radius:12px;color:var(--tx);font-size:13px;padding:13px;outline:none;resize:vertical;min-height:86px;font-family:'Inter',sans-serif;margin-bottom:12px;transition:border-color .3s;}
+#cr2:focus{border-color:var(--c);}
+.actn{width:100%;padding:12px;background:rgba(0,114,198,0.07);border:1.5px solid rgba(0,114,198,0.25);border-radius:12px;color:var(--c);font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;font-family:'Inter',sans-serif;letter-spacing:.3px;}
+.actn:hover{background:rgba(0,114,198,0.13);box-shadow:var(--glow);}
+.actn.purple{border-color:rgba(124,58,237,0.25);color:var(--p);background:rgba(124,58,237,0.05);}
+.actn.purple:hover{background:rgba(124,58,237,0.1);box-shadow:var(--pglow);}
+.actn.green{border-color:rgba(0,168,107,0.25);color:var(--g);background:rgba(0,168,107,0.05);}
+.actn.green:hover{background:rgba(0,168,107,0.1);}
+#co{margin-top:14px;display:none;}
+
+/* IMAGE PANEL */
+#p-image .spanel{overflow-y:auto;}
+.img-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.img-tab{flex:1;padding:10px;background:#fff;border:1.5px solid var(--bds);border-radius:12px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .25s;text-align:center;}
+.img-tab.on{border-color:var(--c);color:var(--c);background:rgba(0,114,198,0.06);}
+.img-tab:hover{border-color:var(--c);}
+#idr{border:2px dashed rgba(0,114,198,0.2);border-radius:16px;padding:40px;text-align:center;color:var(--t2);cursor:pointer;transition:all .3s;margin-bottom:14px;background:rgba(0,114,198,0.02);position:relative;}
+#idr:hover{border-color:var(--c);background:rgba(0,114,198,0.04);}
+#idr input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+#ipa{display:none;margin-bottom:14px;text-align:center;}
+#ipa img{max-width:100%;max-height:260px;border-radius:12px;border:1px solid var(--bds);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+.itools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.itl{padding:7px 13px;background:#fff;border:1px solid var(--bds);border-radius:20px;color:var(--t2);font-size:11px;cursor:pointer;transition:all .22s;font-weight:500;}
+.itl:hover{border-color:var(--p);color:var(--p);background:rgba(124,58,237,0.05);}
+#itk{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.14);border-radius:12px;color:var(--tx);font-size:13px;padding:12px 14px;outline:none;margin-bottom:12px;font-family:'Inter',sans-serif;transition:border-color .3s;}
+#itk:focus{border-color:var(--p);}
+#irs{margin-top:14px;background:#fff;border:1px solid var(--bds);border-radius:14px;padding:16px;font-size:13.5px;line-height:1.8;display:none;white-space:pre-wrap;box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+/* Image Gen */
+.gen-panel{display:none;}
+.gen-panel.on{display:block;}
+#gprompt{width:100%;background:#f8fafc;border:1.5px solid rgba(124,58,237,0.18);border-radius:12px;color:var(--tx);font-size:13px;padding:13px;outline:none;resize:vertical;min-height:86px;font-family:'Inter',sans-serif;margin-bottom:12px;transition:border-color .3s;}
+#gprompt:focus{border-color:var(--p);}
+.style-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.sc{padding:7px 13px;background:#fff;border:1px solid var(--bds);border-radius:20px;font-size:11px;color:var(--t2);cursor:pointer;transition:all .22s;font-weight:500;}
+.sc:hover,.sc.on{border-color:var(--p);color:var(--p);background:rgba(124,58,237,0.05);}
+.size-row{display:flex;gap:8px;margin-bottom:14px;}
+.sz{flex:1;padding:8px;background:#fff;border:1px solid var(--bds);border-radius:10px;font-size:11px;color:var(--t2);cursor:pointer;text-align:center;transition:all .22s;}
+.sz.on{border-color:var(--p);color:var(--p);background:rgba(124,58,237,0.05);}
+#gres{margin-top:14px;display:none;text-align:center;}
+#gres img{max-width:100%;border-radius:14px;border:1px solid var(--bds);box-shadow:0 6px 24px rgba(0,0,0,0.1);}
+.img-actions{display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap;}
+.img-act-btn{padding:8px 18px;background:#fff;border:1px solid var(--bds);border-radius:20px;font-size:12px;color:var(--t2);cursor:pointer;transition:all .22s;font-weight:500;text-decoration:none;}
+.img-act-btn:hover{border-color:var(--c);color:var(--c);}
+
+/* RECENT */
+.ri{padding:14px 16px;background:#fff;border:1px solid var(--bds);border-radius:12px;cursor:pointer;transition:all .25s;margin-bottom:9px;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.ri:hover{border-color:var(--c);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,114,198,0.08);}
+.rt{font-size:13px;color:var(--tx);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.rtime{font-size:10px;color:var(--t2);}
+
+/* SETTINGS */
+.sg{background:#fff;border:1px solid var(--bds);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.sg-title{font-size:10px;color:var(--c);text-transform:uppercase;letter-spacing:2px;margin-bottom:13px;font-weight:700;}
+.sr{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.sr label{font-size:10px;color:var(--t2);letter-spacing:.8px;text-transform:uppercase;font-weight:500;}
+.sr input,.sr select{background:#f8fafc;border:1.5px solid rgba(0,114,198,0.14);border-radius:10px;color:var(--tx);font-size:13px;padding:10px 13px;outline:none;width:100%;font-family:'Inter',sans-serif;transition:border-color .3s;}
+.sr input:focus,.sr select:focus{border-color:var(--c);}
+.sa{display:block;padding:11px;text-align:center;background:rgba(0,114,198,0.05);border:1px solid rgba(0,114,198,0.18);border-radius:10px;color:var(--c);font-size:12px;font-weight:600;text-decoration:none;letter-spacing:.8px;transition:all .3s;margin-top:8px;font-family:'Inter',sans-serif;}
+.sa:hover{background:rgba(0,114,198,0.1);}
+.tbtn{width:100%;padding:10px;background:rgba(0,114,198,0.05);border:1px solid rgba(0,114,198,0.15);border-radius:10px;color:var(--c);font-size:12px;cursor:pointer;margin-top:9px;transition:all .25s;font-family:'Inter',sans-serif;font-weight:500;}
+.tbtn:hover{background:rgba(0,114,198,0.12);}
+.pb{display:flex;align-items:center;justify-content:space-between;padding:16px;background:linear-gradient(135deg,rgba(0,114,198,0.05),rgba(124,58,237,0.04));border:1px solid var(--bds);border-radius:14px;margin-top:14px;}
+.pb-info h3{font-size:14px;color:var(--c);font-weight:700;}
+.pb-info p{font-size:10px;color:var(--t2);margin-top:3px;}
+.pb-info .ver{color:var(--g);margin-top:5px;font-size:10px;font-weight:600;}
+
+/* TOAST */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(16px);background:#fff;border:1px solid var(--bds);border-radius:24px;padding:9px 20px;font-size:12px;color:var(--tx);box-shadow:0 8px 24px rgba(0,0,0,0.12);opacity:0;transition:all .4s cubic-bezier(.34,1.4,.64,1);pointer-events:none;z-index:100;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══ LOGIN SCREEN ═══ */
+#login-screen{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(244,247,251,0.97);backdrop-filter:blur(10px);padding:20px;transition:opacity .5s ease,visibility .5s;}
+#login-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.login-card{background:#fff;border:1px solid var(--bds);border-radius:24px;padding:40px 36px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.12);animation:loginIn .7s cubic-bezier(.22,1,.36,1);}
+@keyframes loginIn{from{opacity:0;transform:translateY(28px) scale(.94);filter:blur(4px);}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}}
+.login-card>*{opacity:0;animation:loginItemIn .5s cubic-bezier(.22,1,.36,1) both;}
+.login-card>*:nth-child(1){animation-delay:.1s;}
+.login-card>*:nth-child(2){animation-delay:.2s;}
+.login-card>*:nth-child(3){animation-delay:.3s;}
+.login-card>*:nth-child(4){animation-delay:.4s;}
+@keyframes loginItemIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.login-logo-glow{animation:hxbwBreathe 3.2s ease-in-out infinite, loginGlow 3.2s ease-in-out infinite;}
+@keyframes loginGlow{0%,100%{filter:drop-shadow(0 0 0px rgba(0,114,198,0));}50%{filter:drop-shadow(0 0 12px rgba(0,114,198,0.25));}}
+#login-orb{width:88px;height:88px;position:relative;margin:0 auto 18px;}
+#login-orb .ph-orb-core{width:88px;height:88px;}
+#login-orb .ph-orb-core svg{width:48px;height:48px;}
+#login-orb .orb-ring1{width:110px;height:110px;}
+#login-orb .orb-ring2{width:134px;height:134px;}
+#login-orb .orb-ring3{width:158px;height:158px;}
+#login-orb .orb-ring4{width:184px;height:184px;}
+#login-orb .orb-dot1,#login-orb .orb-dot2,#login-orb .orb-dot3{transform-origin:0 0;}
+#login-orb .orb-dot1{animation:orbitDotSm 7s linear infinite;}
+#login-orb .orb-dot2{animation:orbitDotSm 12s linear infinite reverse;animation-delay:-4s;}
+#login-orb .orb-dot3{animation:orbitDotSm 18s linear infinite;animation-delay:-8s;}
+@keyframes orbitDotSm{0%{transform:rotate(0deg) translateX(54px) translateY(-3px);}100%{transform:rotate(360deg) translateX(54px) translateY(-3px);}}
+.login-title{font-size:26px;font-weight:900;letter-spacing:7px;color:#111111;margin-bottom:6px;}
+.login-sub{font-size:11.5px;color:var(--t2);margin-bottom:30px;letter-spacing:.3px;}
+.oauth-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border-radius:12px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s;margin-bottom:11px;font-family:'Inter',sans-serif;position:relative;overflow:hidden;}
+.oauth-btn::before{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(115deg, transparent, rgba(255,255,255,0.4), transparent);transform:skewX(-20deg);transition:left .5s ease;pointer-events:none;}
+.oauth-btn:hover::before{left:130%;}
+.oauth-btn:hover{transform:translateY(-2px);}
+.google-btn{background:#fff;border:1.5px solid #dadce0;color:#3c4043;}
+.google-btn:hover{box-shadow:0 2px 10px rgba(0,0,0,0.1);border-color:#c6c9cd;}
+.fb-btn{background:#1877F2;border:1.5px solid #1877F2;color:#fff;}
+.fb-btn:hover{background:#166fe5;box-shadow:0 4px 14px rgba(24,119,242,0.3);}
+.login-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--t3);font-size:11px;}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--bds);}
+.name-btn{background:rgba(0,114,198,0.06);border:1.5px solid rgba(0,114,198,0.2);color:var(--c);}
+.name-btn:hover{background:rgba(0,114,198,0.12);}
+.login-note{font-size:10.5px;color:var(--t3);line-height:1.6;margin-top:16px;}
+.login-prompt-text{font-size:14px;color:var(--tx);font-weight:600;margin-bottom:16px;}
+#login-name-input{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.18);border-radius:12px;color:var(--tx);font-size:15px;padding:13px 16px;outline:none;margin-bottom:14px;font-family:'Inter',sans-serif;text-align:center;transition:border-color .3s;}
+#login-name-input:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,114,198,0.08);}
+.login-submit-btn{width:100%;padding:13px;background:linear-gradient(135deg,#0072c6,#0059a3);border:none;border-radius:12px;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .3s;margin-bottom:10px;letter-spacing:.4px;box-shadow:0 4px 14px rgba(0,114,198,0.25);}
+.login-submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,114,198,0.35);}
+.login-back-btn{background:transparent;border:none;color:var(--t2);font-size:12px;cursor:pointer;padding:6px;}
+.login-back-btn:hover{color:var(--c);}
+
+/* User badge */
+#user-badge{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 5px;border:1px solid var(--bds);border-radius:20px;background:#fff;cursor:pointer;transition:all .25s;}
+#user-badge:hover{border-color:var(--c);box-shadow:var(--glow);}
+#user-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#0072c6,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+#user-badge-name{font-size:11.5px;color:var(--tx);font-weight:600;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ═══ TOOLS HUB ═══ */
+.tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:8px;}
+@media(max-width:560px){.tools-grid{grid-template-columns:1fr;}}
+.tool-card{display:flex;align-items:flex-start;gap:14px;background:#fff;border:1px solid var(--bds);border-radius:16px;padding:18px;cursor:pointer;transition:all .3s cubic-bezier(.34,1.2,.64,1);box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+.tool-card:hover{border-color:var(--c);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,114,198,0.1);}
+.tool-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.tool-info h3{font-size:13.5px;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.tool-info p{font-size:11px;color:var(--t2);line-height:1.5;}
+.tool-detail{display:none;}
+.tool-detail.on{display:block;animation:panelIn .3s cubic-bezier(.34,1.2,.64,1);}
+.tool-back{padding:7px 14px;background:#fff;border:1px solid var(--bds);border-radius:18px;color:var(--t2);font-size:11.5px;cursor:pointer;transition:all .25s;margin-bottom:16px;font-weight:500;}
+.tool-back:hover{border-color:var(--c);color:var(--c);}
+.tool-detail-title{font-size:16px;font-weight:700;color:var(--tx);margin-bottom:6px;}
+.tool-detail-sub{font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:18px;}
+.tool-textarea{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.14);border-radius:12px;color:var(--tx);font-size:13px;padding:13px;outline:none;resize:vertical;min-height:90px;font-family:'Inter',sans-serif;margin-bottom:12px;transition:border-color .3s;}
+.tool-textarea:focus{border-color:var(--c);}
+.tool-textarea-sm{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.14);border-radius:12px;color:var(--tx);font-size:13px;padding:12px 14px;outline:none;font-family:'Inter',sans-serif;margin-bottom:12px;transition:border-color .3s;}
+.tool-textarea-sm:focus{border-color:var(--c);}
+.tool-result{margin-top:16px;background:#fff;border:1px solid var(--bds);border-radius:14px;padding:18px;font-size:13.5px;line-height:1.85;display:none;white-space:pre-wrap;box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+.tool-dropzone{border:2px dashed rgba(0,114,198,0.2);border-radius:16px;padding:32px;text-align:center;color:var(--t2);cursor:pointer;transition:all .3s;margin-bottom:14px;background:rgba(0,114,198,0.02);position:relative;}
+.tool-dropzone:hover{border-color:var(--c);background:rgba(0,114,198,0.04);}
+.tool-dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.doc-file-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:#f0f7ff;border:1px solid rgba(0,114,198,0.18);border-radius:12px;font-size:12.5px;color:var(--tx);}
+
+/* ═══ STOP GENERATION ═══ */
+#bsnd.stopping{background:linear-gradient(135deg,#dc2626,#b91c1c);box-shadow:0 4px 14px rgba(220,38,38,0.35);font-size:15px;}
+#bsnd.stopping:hover{box-shadow:0 6px 22px rgba(220,38,38,0.45);transform:scale(1.06);}
+
+/* ═══ EDIT & RESEND ═══ */
+.msg-edit-btn{background:none;border:none;cursor:pointer;font-size:11px;color:var(--t3);padding:0 2px;transition:color .2s;line-height:1;}
+.msg-edit-btn:hover{color:var(--c);}
+.edit-ta{width:100%;min-width:240px;background:#fff;border:1.5px solid var(--c);border-radius:10px;color:var(--tx);font-size:13.5px;font-family:'Inter',sans-serif;padding:10px 12px;resize:vertical;min-height:48px;outline:none;}
+.edit-actions{display:flex;gap:8px;margin-top:8px;}
+.edit-save,.edit-cancel{padding:6px 14px;border-radius:14px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--bds);transition:all .2s;font-family:'Inter',sans-serif;}
+.edit-save{background:var(--c);color:#fff;border-color:var(--c);}
+.edit-save:hover{background:#0059a3;}
+.edit-cancel{background:transparent;color:var(--t2);}
+.edit-cancel:hover{color:var(--r);border-color:var(--r);}
+
+/* ═══ RECENT: SEARCH + DELETE ═══ */
+.rec-search-input{width:100%;background:#f8fafc;border:1.5px solid rgba(0,114,198,0.14);border-radius:12px;color:var(--tx);font-size:13px;padding:11px 14px;outline:none;margin-bottom:14px;font-family:'Inter',sans-serif;transition:border-color .3s;}
+.rec-search-input:focus{border-color:var(--c);}
+.ri{position:relative;padding-right:42px;}
+.ri-del{position:absolute;top:50%;right:12px;transform:translateY(-50%);background:none;border:none;font-size:14px;color:var(--t3);cursor:pointer;padding:6px;border-radius:8px;transition:all .2s;}
+.ri-del:hover{color:var(--r);background:rgba(220,38,38,0.08);}
+
+/* ═══ DRAG & DROP ═══ */
+#iw.drag-over{border-color:var(--g);background:rgba(0,168,107,0.06);box-shadow:0 0 0 3px rgba(0,168,107,0.12);}
+
+/* ═══ DARK MODE ═══ */
+body.dark{--bg:#0e1318;--bg2:#141a21;--bg3:#1b232c;--tx:#e7eaee;--t2:#9aa6b2;--t3:#6c7682;--bd:rgba(0,162,255,0.25);--bds:rgba(255,255,255,0.08);--card:#1a212b;--card2:#212a36;}
+body.dark #intro-screen{background:#0e1318;}
+body.dark .intro-text{color:#e7eaee;}
+body.dark .intro-sub{color:#6c7682;}
+body.dark .intro-bar-wrap{border-color:#2a333d;}
+body.dark .intro-bar{color:#9aa6b2;}
+body.dark .hxbw-ring{border-color:rgba(231,234,238,0.15);}
+body.dark #hdr,body.dark #tabs{background:rgba(20,26,33,0.92);}
+body.dark #ia{background:rgba(20,26,33,0.94);}
+body.dark .chip,body.dark .bbl.h,body.dark #tp.msg .typing-bbl,body.dark #vlog,body.dark .vlang-btn,body.dark .card,body.dark .lb,body.dark .img-tab,body.dark .itl,body.dark #irs,body.dark .sc,body.dark .sz,body.dark .img-act-btn,body.dark .ri,body.dark .sg,body.dark #toast,body.dark .login-card,body.dark #user-badge,body.dark .tool-card,body.dark .tool-back,body.dark .tool-result,body.dark .edit-ta{background:var(--card);}
+body.dark .chip:hover{background:#1d2838;}
+body.dark .cblk{background:#0d1117;border-color:rgba(255,255,255,0.08);}
+body.dark .cblk-hdr{background:#161b22;border-color:rgba(255,255,255,0.06);}
+body.dark #iw,body.dark .sr input,body.dark .sr select,body.dark #ci,body.dark .cn,body.dark .sf,body.dark #cr2,body.dark #itk,body.dark #gprompt,body.dark .tool-textarea,body.dark .tool-textarea-sm,body.dark #login-name-input,body.dark .rec-search-input{background:var(--card2);}
+body.dark #iw:focus-within{background:var(--card);}
+body.dark .bbl.u{background:linear-gradient(135deg,rgba(0,162,255,0.12),rgba(0,162,255,0.06));border-color:rgba(0,162,255,0.22);}
+body.dark .bbl.sys{background:rgba(217,119,6,0.12);border-color:rgba(217,119,6,0.3);color:#fbbf24;}
+body.dark #cr{background:rgba(0,162,255,0.08);}
+body.dark .doc-file-chip{background:rgba(0,162,255,0.1);border-color:rgba(0,162,255,0.22);}
+body.dark .google-btn{background:#fff;}
+body.dark #bdark.on{border-color:var(--gold);color:var(--gold);background:rgba(217,119,6,0.1);}
+body.dark #logo-txt h1,body.dark .login-title,body.dark #ph h2{color:#e7eaee;}
+</style>
+<!-- Real sign-in SDKs — both free, no backend required -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<!-- ═══ HELIX MONOCHROME LOGO — single source, reused everywhere via <use> ═══ -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+<defs>
+<symbol id="hx-logo-bw" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="47" fill="none" stroke="#d1d5db" stroke-width="1"/>
+  <circle cx="50" cy="6" r="2.1" fill="#111111"/>
+  <line x1="32" y1="34" x2="32" y2="60" stroke="#9ca3af" stroke-width="0.7" opacity="0.5"/>
+  <line x1="41" y1="32" x2="41" y2="62" stroke="#9ca3af" stroke-width="0.7" opacity="0.5"/>
+  <line x1="50" y1="31" x2="50" y2="63" stroke="#9ca3af" stroke-width="0.7" opacity="0.5"/>
+  <line x1="59" y1="32" x2="59" y2="62" stroke="#9ca3af" stroke-width="0.7" opacity="0.5"/>
+  <line x1="68" y1="34" x2="68" y2="60" stroke="#9ca3af" stroke-width="0.7" opacity="0.5"/>
+  <path d="M17,33 C28,16 40,11 50,13 C60,11 72,16 83,33 C70,28 59,25 50,26 C41,25 30,28 17,33 Z" fill="#111111"/>
+  <circle cx="17" cy="33" r="2.4" fill="#111111"/>
+  <circle cx="83" cy="33" r="2.4" fill="#111111"/>
+  <path d="M15,63 C26,81 42,86 50,84 C58,86 74,81 85,62 C73,73 60,79 50,77 C40,79 27,73 15,63 Z" fill="#6b7280"/>
+  <circle cx="15" cy="63" r="2.2" fill="#6b7280"/>
+  <circle cx="85" cy="62" r="2.2" fill="#6b7280"/>
+  <circle cx="50" cy="47" r="14" fill="#ffffff" stroke="#111111" stroke-width="1.6"/>
+  <text x="50" y="51" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="800" fill="#111111" letter-spacing="0.5">HX</text>
+</symbol>
+</defs>
+</svg>
+
+<canvas id="bg"></canvas>
+<div class="aurora"></div>
+<div class="orb-bg orb1"></div>
+<div class="orb-bg orb2"></div>
+<div class="orb-bg orb3"></div>
+<div class="grid-bg"></div>
+<div class="scan"></div>
+<div class="scan2"></div>
+<div id="cursor-glow"></div>
+
+<!-- ═══ INTRO ANIMATION SCREEN ═══ -->
+<div id="intro-screen">
+  <div class="intro-logo-wrap">
+    <div class="hxbw-ring" style="width:130px;height:130px;"></div>
+    <div class="hxbw-ring" style="width:130px;height:130px;animation-delay:.65s;"></div>
+    <svg class="hxbw-icon hxbw-breathe" width="100" height="100" viewBox="0 0 100 100"><use href="#hx-logo-bw"/></svg>
+  </div>
+  <div class="intro-text">HELIX</div>
+  <div class="intro-sub">Artificial Intelligence</div>
+  <div class="intro-bar-wrap"><span class="intro-bar">v 5.9</span></div>
+</div>
+
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <!-- HELIX monochrome logo for login -->
+    <div style="position:relative;width:92px;height:92px;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;">
+      <svg class="hxbw-icon login-logo-glow" width="92" height="92" viewBox="0 0 100 100"><use href="#hx-logo-bw"/></svg>
+    </div>
+    <h1 class="login-title">H.E.L.I.X</h1>
+    <p class="login-sub">Your advanced AI assistant · by Pritam BK</p>
+
+    <div id="login-step1">
+      <button class="oauth-btn google-btn" onclick="startOAuth('google')">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.5-2.1 14.3-5.6l-6.6-5.6C29.6 34.6 26.9 36 24 36c-5.3 0-9.7-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.8l6.6 5.6C39.9 37.5 44 31.4 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+        Continue with Google
+      </button>
+      <p class="login-note">Sign in with Google to get started.</p>
+    </div>
+
+    <div id="login-step2" style="display:none;">
+      <p class="login-prompt-text" id="login-greeting">What should HELIX call you?</p>
+      <input id="login-name-input" type="text" placeholder="Enter your name..." maxlength="40" autocomplete="off"/>
+      <button class="login-submit-btn" onclick="completeLogin()">Continue →</button>
+      <button class="login-back-btn" onclick="backToStep1()">← Back</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- HEADER -->
+<div id="hdr">
+  <div id="logo">
+    <div id="logo-mark">
+      <svg class="hxbw-icon hxbw-breathe" width="44" height="44" viewBox="0 0 100 100"><use href="#hx-logo-bw"/></svg>
+    </div>
+    <div id="logo-txt"><h1>H.E.L.I.X</h1><p>Advanced AI v5.9 · by Pritam BK · Nepal 🇳🇵</p></div>
+  </div>
+  <div id="hdr-right">
+    <span id="sdot"></span>
+    <div id="user-badge" onclick="logoutUser()" title="Click to sign out">
+      <div id="user-avatar">?</div>
+      <span id="user-badge-name">Guest</span>
+    </div>
+    <button class="hbtn" id="binstall" onclick="installHelix()" title="Install HELIX as an app" style="display:none;">📲 Install</button>
+    <button class="hbtn" id="bv" onclick="toggleV()">🔊 Voice</button>
+    <button class="hbtn" id="bdark" onclick="toggleDark()" title="Toggle dark mode">🌙 Dark</button>
+    <button class="hbtn" onclick="exportChat()" title="Export chat as Markdown">⬇️ Export</button>
+    <button class="hbtn" onclick="clearAll()">🗑 Clear</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div id="tabs">
+  <div class="tb on" onclick="sw('chat')">💬 Chat</div>
+  <div class="tb" onclick="sw('voice')">🎙 Voice</div>
+  <div class="tb" onclick="sw('tools')">🧰 Tools</div>
+  <div class="tb" onclick="sw('calc')">🔢 Calculator</div>
+  <div class="tb" onclick="sw('code')">⌨️ Code</div>
+  <div class="tb" onclick="sw('image')">🎨 Image AI</div>
+  <div class="tb" onclick="sw('recent')">🕐 Recent</div>
+  <div class="tb" onclick="sw('settings')">⚙️ Settings</div>
+</div>
+
+<!-- PANELS -->
+<div id="panels">
+
+<!-- CHAT -->
+<div class="pn on" id="p-chat">
+  <div id="log">
+    <div id="ph">
+      <div id="ph-orb">
+        <!-- orbit rings -->
+        <div class="ph-orbit-ring ph-orbit-ring1"></div>
+        <div class="ph-orbit-ring ph-orbit-ring2"></div>
+        <div class="ph-orbit-ring ph-orbit-ring3"></div>
+        <div class="ph-orbit-dot ph-orbit-dot1"></div>
+        <div class="ph-orbit-dot ph-orbit-dot2"></div>
+        <div class="ph-orbit-dot ph-orbit-dot3"></div>
+        <!-- HELIX monochrome logo -->
+        <svg class="hxbw-icon hxbw-breathe" width="120" height="120" viewBox="0 0 100 100" style="position:relative;z-index:2;"><use href="#hx-logo-bw"/></svg>
+      </div>
+      <h2>H.E.L.I.X</h2>
+      <div class="sub">VERSION 5.9 · NEPAL EDITION · BY PRITAM BK</div>
+      <div class="chips">
+        <div class="chip" onclick="qs('176840684 * 54646953 calculate precisely')"><span class="chip-icon">🔢</span>Big math</div>
+        <div class="chip" onclick="qs('Python मा simple calculator code लेख्नुस्')"><span class="chip-icon">⌨️</span>Write code</div>
+        <div class="chip" onclick="qs('तिमीलाई कसले बनायो?')"><span class="chip-icon">👁</span>About HELIX</div>
+        <div class="chip" onclick="qs('Newton को तीन नियम explain गर्नुस् step by step')"><span class="chip-icon">🔬</span>Science</div>
+        <div class="chip" onclick="qs('Pokhara को आजको मौसम कस्तो छ?')"><span class="chip-icon">🌤</span>Weather</div>
+        <div class="chip" onclick="qs('नेपालको इतिहास संक्षेपमा बताउनुस्')"><span class="chip-icon">🇳🇵</span>Nepal history</div>
+      </div>
+    </div>
+  </div>
+  <div id="ia">
+    <div id="ap"></div>
+    <div id="ib">
+      <div id="iw">
+        <textarea id="inp" rows="1" placeholder="Ask HELIX anything — math, science, Nepal, coding, voice..."></textarea>
+        <label class="ibt" style="cursor:pointer;" title="Attach file">📎<input type="file" id="fi" style="display:none;" multiple accept="image/*,.txt,.py,.js,.html,.css,.json,.md,.csv,.c,.cpp,.java"/></label>
+        <button class="ibt" id="mb" onclick="toggleMic()" title="Voice input">🎤</button>
+      </div>
+      <button id="bsnd" onclick="sendMsg()">➤</button>
+    </div>
+    <div id="ih">Enter = Send &nbsp;·&nbsp; Shift+Enter = New line &nbsp;·&nbsp; 📎/Drop = Attach file &nbsp;·&nbsp; / = Focus input &nbsp;·&nbsp; Esc = Stop</div>
+  </div>
+</div>
+
+<!-- VOICE -->
+<div class="pn" id="p-voice">
+  <div id="vp">
+    <div id="vorb" onclick="toggleVF()" style="position:relative;display:flex;align-items:center;justify-content:center;">
+      <div class="hxbw-ring" style="width:120px;height:120px;position:absolute;"></div>
+      <div class="hxbw-ring" style="width:120px;height:120px;position:absolute;animation-delay:.65s;"></div>
+      <svg class="hxbw-icon hxbw-breathe" width="120" height="120" viewBox="0 0 100 100" style="position:relative;z-index:2;"><use href="#hx-logo-bw" xlink:href="#hx-logo-bw"/></svg>
+    </div>
+    <div id="vst">Click orb to activate HELIX Voice</div>
+    <div class="vst-info">Speak in English or Nepali — HELIX will listen and respond automatically</div>
+    <div class="vlang-sel">
+      <div class="vlang-btn on" onclick="setVLang('en-US',this)">🇺🇸 English</div>
+      <div class="vlang-btn" onclick="setVLang('ne-NP',this)">🇳🇵 Nepali</div>
+      <div class="vlang-btn" onclick="setVLang('en-IN',this)">🇮🇳 Hindi-EN</div>
+    </div>
+    <div id="vw"></div>
+    <div id="vlog"><span style="color:var(--t2)">Conversation appears here after activation...</span></div>
+    <button id="vbtn" onclick="toggleVF()">👁 ACTIVATE HELIX VOICE</button>
+  </div>
+</div>
+
+<!-- TOOLS HUB -->
+<div class="pn" id="p-tools">
+  <div class="spanel">
+    <h2>🧰 HELIX Tools</h2>
+    <div class="tools-grid" id="tools-grid">
+      <div class="tool-card" onclick="openTool('study')">
+        <div class="tool-icon" style="background:rgba(0,114,198,0.08);">📚</div>
+        <div class="tool-info"><h3>Study Assistant</h3><p>Grade 11–12 help across all NEB subjects</p></div>
+      </div>
+      <div class="tool-card" onclick="openTool('crop')">
+        <div class="tool-icon" style="background:rgba(0,168,107,0.08);">🌾</div>
+        <div class="tool-info"><h3>Crop Disease Detector</h3><p>Upload a plant photo for diagnosis &amp; treatment</p></div>
+      </div>
+      <div class="tool-card" onclick="openTool('career')">
+        <div class="tool-icon" style="background:rgba(124,58,237,0.08);">🎯</div>
+        <div class="tool-info"><h3>Career Guidance</h3><p>Personalized path based on your interests</p></div>
+      </div>
+      <div class="tool-card" onclick="openTool('doc')">
+        <div class="tool-icon" style="background:rgba(217,119,6,0.08);">📄</div>
+        <div class="tool-info"><h3>Document Analyzer</h3><p>Upload docs, images, or data for insights</p></div>
+      </div>
+    </div>
+
+    <!-- STUDY ASSISTANT -->
+    <div class="tool-detail" id="tool-study">
+      <button class="tool-back" onclick="closeToolDetail()">← Back to Tools</button>
+      <h3 class="tool-detail-title">📚 Study Assistant — Grade 11–12</h3>
+      <p class="tool-detail-sub">Get help with NEB curriculum subjects, step-by-step solutions, and exam prep.</p>
+      <div class="lg">
+        <div class="lb on" onclick="selSubj(this,'Physics')">⚛️ Physics</div>
+        <div class="lb" onclick="selSubj(this,'Chemistry')">🧪 Chemistry</div>
+        <div class="lb" onclick="selSubj(this,'Biology')">🧬 Biology</div>
+        <div class="lb" onclick="selSubj(this,'Mathematics')">📐 Math</div>
+        <div class="lb" onclick="selSubj(this,'English')">🔤 English</div>
+        <div class="lb" onclick="selSubj(this,'Nepali')">🇳🇵 Nepali</div>
+        <div class="lb" onclick="selSubj(this,'Computer Science')">💻 Computer Sci</div>
+      </div>
+      <textarea id="study-q" class="tool-textarea" placeholder="Type your question, topic, or paste the problem you need help with..."></textarea>
+      <button class="actn" onclick="askStudy()">📖 Get Help</button>
+      <div id="study-result" class="tool-result"></div>
+    </div>
+
+    <!-- CROP DISEASE DETECTOR -->
+    <div class="tool-detail" id="tool-crop">
+      <button class="tool-back" onclick="closeToolDetail()">← Back to Tools</button>
+      <h3 class="tool-detail-title">🌾 Crop Disease Detector</h3>
+      <p class="tool-detail-sub">Upload a clear photo of the affected leaf, stem, or fruit for diagnosis and treatment advice.</p>
+      <div id="crop-drop" class="tool-dropzone">
+        <input type="file" accept="image/*" onchange="loadCropImg(this)"/>
+        <p style="font-size:26px;margin-bottom:6px">🌱</p>
+        <p style="font-size:13px;font-weight:600;color:var(--tx)">Click or drop a crop/plant photo here</p>
+      </div>
+      <div id="crop-preview" style="display:none;text-align:center;margin-bottom:14px;"><img id="crop-img" src="" style="max-width:100%;max-height:240px;border-radius:12px;border:1px solid var(--bds);"/></div>
+      <input id="crop-context" class="tool-textarea-sm" placeholder="Optional: crop type, location, symptoms (e.g. 'tomato plant, Chitwan, yellow spots on leaves')"/>
+      <button class="actn green" onclick="analyzeCrop()">🔬 Diagnose Crop</button>
+      <div id="crop-result" class="tool-result"></div>
+    </div>
+
+    <!-- CAREER GUIDANCE -->
+    <div class="tool-detail" id="tool-career">
+      <button class="tool-back" onclick="closeToolDetail()">← Back to Tools</button>
+      <h3 class="tool-detail-title">🎯 Career Guidance</h3>
+      <p class="tool-detail-sub">Tell HELIX about your interests, strengths, and education level for personalized career suggestions in the Nepali context.</p>
+      <textarea id="career-q" class="tool-textarea" placeholder="Tell me about yourself — your favorite subjects, hobbies, education level (e.g. Grade 12, Bachelor's), skills, and what kind of work excites you..."></textarea>
+      <button class="actn purple" onclick="askCareer()">🎯 Get Guidance</button>
+      <div id="career-result" class="tool-result"></div>
+    </div>
+
+    <!-- DOCUMENT ANALYZER -->
+    <div class="tool-detail" id="tool-doc">
+      <button class="tool-back" onclick="closeToolDetail()">← Back to Tools</button>
+      <h3 class="tool-detail-title">📄 Document &amp; Data Analyzer</h3>
+      <p class="tool-detail-sub">Upload a document, image, or data file and HELIX will analyze it and give practical recommendations.</p>
+      <div id="doc-drop" class="tool-dropzone">
+        <input type="file" accept="image/*,.txt,.csv,.json,.md" onchange="loadDocFile(this)"/>
+        <p style="font-size:26px;margin-bottom:6px">📎</p>
+        <p style="font-size:13px;font-weight:600;color:var(--tx)">Click or drop a file here</p>
+        <p style="font-size:10px;color:var(--t2);margin-top:4px">Images, text, CSV, JSON, Markdown</p>
+      </div>
+      <div id="doc-preview" style="display:none;margin-bottom:14px;"></div>
+      <input id="doc-context" class="tool-textarea-sm" placeholder="What would you like to know? (e.g. 'summarize this', 'find trends', 'check for errors')"/>
+      <button class="actn" onclick="analyzeDoc()">🔎 Analyze</button>
+      <div id="doc-result" class="tool-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="pn" id="p-calc">
+  <div class="spanel">
+    <h2>🔢 Precision Calculator</h2>
+    <input id="ci" placeholder="e.g. 176840684*54646953 or sqrt(144) or 2^10" oninput="calcLive()"/>
+    <div id="cr">Result appears here...</div>
+    <div class="cg2">
+      <div class="cn cl" onclick="calcClear()">C</div>
+      <div class="cn cl" onclick="calcDel()">⌫</div>
+      <div class="cn op" onclick="cinp('%')">%</div>
+      <div class="cn op" onclick="cinp('/')">÷</div>
+      <div class="cn" onclick="cinp('7')">7</div><div class="cn" onclick="cinp('8')">8</div>
+      <div class="cn" onclick="cinp('9')">9</div>
+      <div class="cn op" onclick="cinp('*')">×</div>
+      <div class="cn" onclick="cinp('4')">4</div><div class="cn" onclick="cinp('5')">5</div>
+      <div class="cn" onclick="cinp('6')">6</div>
+      <div class="cn op" onclick="cinp('-')">−</div>
+      <div class="cn" onclick="cinp('1')">1</div><div class="cn" onclick="cinp('2')">2</div>
+      <div class="cn" onclick="cinp('3')">3</div>
+      <div class="cn op" onclick="cinp('+')">+</div>
+      <div class="cn" onclick="cinp('0')" style="grid-column:span 2">0</div>
+      <div class="cn" onclick="cinp('.')">.</div>
+      <div class="cn eq" onclick="calcEval()">=</div>
+    </div>
+    <div class="sfns">
+      <div class="sf" onclick="cinp('Math.sqrt(')">√x</div>
+      <div class="sf" onclick="cinp('**')">xⁿ</div>
+      <div class="sf" onclick="cinp('Math.PI')">π</div>
+      <div class="sf" onclick="cinp('Math.sin(')">sin</div>
+      <div class="sf" onclick="cinp('Math.cos(')">cos</div>
+      <div class="sf" onclick="cinp('Math.log10(')">log</div>
+      <div class="sf" onclick="cinp('Math.abs(')">|x|</div>
+      <div class="sf" onclick="cinp('Math.floor(')">⌊x⌋</div>
+    </div>
+  </div>
+</div>
+
+<!-- CODE -->
+<div class="pn" id="p-code">
+  <div class="spanel">
+    <h2>⌨️ Code Assistant</h2>
+    <div class="lg">
+      <div class="lb on" onclick="sl(this,'Python')">🐍 Python</div>
+      <div class="lb" onclick="sl(this,'JavaScript')">🟨 JavaScript</div>
+      <div class="lb" onclick="sl(this,'HTML/CSS')">🌐 HTML/CSS</div>
+      <div class="lb" onclick="sl(this,'Java')">☕ Java</div>
+      <div class="lb" onclick="sl(this,'C++')">⚙️ C++</div>
+      <div class="lb" onclick="sl(this,'PHP')">🐘 PHP</div>
+      <div class="lb" onclick="sl(this,'SQL')">🗄️ SQL</div>
+      <div class="lb" onclick="sl(this,'React')">⚛️ React</div>
+    </div>
+    <textarea id="cr2" placeholder="Describe what code you need... e.g. 'Calculator app with GUI', 'Login form with validation'"></textarea>
+    <button class="actn" onclick="genCode()">⚡ Generate Code</button>
+    <div id="co"></div>
+  </div>
+</div>
+
+<!-- IMAGE AI -->
+<div class="pn" id="p-image">
+  <div class="spanel">
+    <h2>🎨 Image AI Studio</h2>
+    <div class="img-tabs">
+      <div class="img-tab on" onclick="imgTabSw('analyze',this)">🔍 Analyze Photo</div>
+      <div class="img-tab" onclick="imgTabSw('generate',this)">✨ Generate Image</div>
+    </div>
+
+    <!-- ANALYZE -->
+    <div id="analyze-panel">
+      <div class="itools">
+        <div class="itl" onclick="sit('Describe this image in complete detail')">🔍 Describe</div>
+        <div class="itl" onclick="sit('Extract all text from this image (OCR)')">📝 Extract Text</div>
+        <div class="itl" onclick="sit('Analyze code or equations shown in this image')">💻 Read Code</div>
+        <div class="itl" onclick="sit('What problems or errors do you see?')">⚠️ Find Issues</div>
+        <div class="itl" onclick="sit('Translate all text in this image to English')">🌐 Translate</div>
+        <div class="itl" onclick="sit('Identify all objects, people and scenes')">👁 Identify</div>
+      </div>
+      <div id="idr">
+        <input type="file" accept="image/*" onchange="loadImg(this)"/>
+        <p style="font-size:28px;margin-bottom:8px">📸</p>
+        <p style="font-size:14px;font-weight:600;color:var(--tx)">Click or drop image here</p>
+        <p style="font-size:11px;color:var(--t2);margin-top:4px">JPG · PNG · GIF · WEBP supported</p>
+      </div>
+      <div id="ipa"><img id="ipr" src="" alt=""/></div>
+      <input id="itk" type="text" value="Describe this image in complete detail" placeholder="What should HELIX analyze?"/>
+      <button class="actn purple" onclick="anaImg()">🔮 Analyze with HELIX</button>
+      <div id="irs"></div>
+    </div>
+
+    <!-- GENERATE -->
+    <div id="generate-panel" class="gen-panel">
+      <p style="font-size:12px;color:var(--t2);margin-bottom:12px">✨ Generate any image from text — powered by AI art engine (free, no API key needed)</p>
+      <textarea id="gprompt" placeholder="Describe your image in detail...&#10;e.g. 'A beautiful mountain landscape in Nepal at sunset, photorealistic, 4K'&#10;e.g. 'Portrait of a warrior with glowing armor, digital art style'&#10;e.g. 'Futuristic city of Kathmandu in 2100, sci-fi concept art'"></textarea>
+      <p style="font-size:11px;color:var(--t2);margin-bottom:10px;font-weight:600;">🎨 Style:</p>
+      <div class="style-chips">
+        <div class="sc on" onclick="selStyle(this,'')">🌟 Default</div>
+        <div class="sc" onclick="selStyle(this,'photorealistic, 8K, DSLR')">📷 Photo Real</div>
+        <div class="sc" onclick="selStyle(this,'digital art, concept art, trending on artstation')">🎨 Digital Art</div>
+        <div class="sc" onclick="selStyle(this,'anime style, Studio Ghibli, detailed illustration')">🌸 Anime</div>
+        <div class="sc" onclick="selStyle(this,'oil painting, impressionist, museum quality')">🖼 Oil Painting</div>
+        <div class="sc" onclick="selStyle(this,'cinematic lighting, movie poster, epic composition')">🎬 Cinematic</div>
+        <div class="sc" onclick="selStyle(this,'watercolor, soft colors, dreamy')">💧 Watercolor</div>
+        <div class="sc" onclick="selStyle(this,'pixel art, retro 8-bit game style')">👾 Pixel Art</div>
+        <div class="sc" onclick="selStyle(this,'3D render, octane render, highly detailed, ultra realistic')">🔮 3D Render</div>
+        <div class="sc" onclick="selStyle(this,'pencil sketch, black and white, hand drawn')">✏️ Sketch</div>
+      </div>
+      <p style="font-size:11px;color:var(--t2);margin-bottom:8px;font-weight:600;">📐 Size:</p>
+      <div class="size-row">
+        <div class="sz on" onclick="selSize(this,'1024x1024')">■ Square<br><span style="font-size:9px">1024×1024</span></div>
+        <div class="sz" onclick="selSize(this,'1280x720')">▬ Wide<br><span style="font-size:9px">1280×720</span></div>
+        <div class="sz" onclick="selSize(this,'768x1344')">▮ Portrait<br><span style="font-size:9px">768×1344</span></div>
+        <div class="sz" onclick="selSize(this,'1920x1080')">🖥 Full HD<br><span style="font-size:9px">1920×1080</span></div>
+      </div>
+      <button class="actn green" onclick="genImg()" id="gen-btn">✨ Generate Image</button>
+      <div id="gres">
+        <img id="gen-img" src="" alt="Generated image"/>
+        <div class="img-actions">
+          <a id="gen-dl" class="img-act-btn" download="helix-image.png">⬇️ Download</a>
+          <button class="img-act-btn" onclick="genImgVariation()">🔄 Variation</button>
+          <button class="img-act-btn" onclick="copyImgPrompt()">📋 Copy Prompt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECENT -->
+<div class="pn" id="p-recent">
+  <div class="spanel">
+    <h2>🕐 Recent Chats</h2>
+    <input type="text" id="rec-search" class="rec-search-input" placeholder="🔍 Search recent chats..." oninput="loadRec(this.value)"/>
+    <div id="rl"><div style="color:var(--t2);text-align:center;padding:40px">No recent chats yet!</div></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="pn" id="p-settings">
+  <div class="spanel">
+    <h2>⚙️ Settings</h2>
+    <div class="sg">
+      <div class="sg-title">🔑 HELIX API Key (Groq)</div>
+      <div class="sr"><label>API Key *</label><input type="password" id="sk" placeholder="gsk_..." oninput="saveK()"/></div>
+      <a class="sa" href="https://console.groq.com/keys" target="_blank">🔑 Get FREE Groq API Key</a>
+    </div>
+    <div class="sg">
+      <div class="sg-title">🔊 Voice Settings</div>
+      <div class="sr">
+        <label>Select Voice</label>
+        <select id="vs" onchange="pickV(this)"><option>Open Settings again in 2 seconds to load voices</option></select>
+      </div>
+      <button class="tbtn" onclick="testV()">🔊 Test — "Hello, I am HELIX!"</button>
+    </div>
+    <div class="sg">
+      <div class="sg-title">🎙 ElevenLabs Premium Voice (Optional)</div>
+      <div class="sr"><label>ElevenLabs Key</label><input type="password" id="ek" placeholder="sk_..." oninput="saveK()"/></div>
+      <div class="sr"><label>Voice ID</label><input type="text" id="ev" placeholder="voice id" oninput="saveK()"/></div>
+      <a class="sa" href="https://elevenlabs.io" target="_blank" style="color:var(--p);border-color:rgba(124,58,237,0.2);">Get ElevenLabs Premium →</a>
+    </div>
+    <div class="pb">
+      <div class="pb-info">
+        <h3>Pritam Bishwokarma</h3>
+        <p>Developer · Nepal, Lamjung, Sundarbazar-7</p>
+        <div class="ver">HELIX AI v5.9 · Made with ❤️ in Nepal 🇳🇵</div>
+      </div>
+      <span style="font-size:38px">🇳🇵</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /panels -->
+</div><!-- /app -->
+<div id="toast"></div>
+
+<script>
+/* ═══ LOGIN / USER IDENTITY SYSTEM ═══ */
+function getUserName(){return localStorage.getItem('hx5_username')||'';}
+function setUserName(n){localStorage.setItem('hx5_username',n);}
+function getGreetingTime(){const h=new Date().getHours();if(h<5)return'Good night';if(h<12)return'Good morning';if(h<17)return'Good afternoon';if(h<21)return'Good evening';return'Good night';}
+
+function updateUserBadge(){
+  const name=getUserName();
+  const av=document.getElementById('user-avatar'),nm=document.getElementById('user-badge-name');
+  if(name){
+    if(av)av.textContent=name.trim().charAt(0).toUpperCase();
+    if(nm)nm.textContent=name;
+  }else{
+    if(av)av.textContent='?';
+    if(nm)nm.textContent='Guest';
+  }
+}
+
+/* ═══ REAL SIGN-IN ═══
+   Google: uses Google Identity Services — needs a free Client ID from
+   https://console.cloud.google.com/apis/credentials (Create Credentials →
+   OAuth client ID → Web application → add this site's URL as an
+   "Authorized JavaScript origin"). Paste it below.
+   Facebook: uses the Facebook JS SDK — needs a free App ID from
+   https://developers.facebook.com/apps (Create App → Consumer →
+   add "Facebook Login" product → add this site's domain). Paste it below.
+   Until real IDs are filled in, both fall back to name-entry automatically. */
+const GOOGLE_CLIENT_ID='705676823507-jblibbn1iqrc7qtsqpn43evav9m96tng.apps.googleusercontent.com';
+const FACEBOOK_APP_ID='YOUR_FACEBOOK_APP_ID_HERE';
+
+function startOAuth(provider){
+  if(provider==='google')startGoogleLogin();
+  else startFacebookLogin();
+}
+
+function startGoogleLogin(){
+  if(GOOGLE_CLIENT_ID.indexOf('YOUR_GOOGLE')===0||typeof google==='undefined'){
+    showToast('🔵 Google sign-in needs setup — using name entry for now',3200);
+    document.getElementById('login-greeting').textContent="What's your name?";
+    showNameStep();
+    return;
+  }
+  try{
+    google.accounts.id.initialize({
+      client_id:GOOGLE_CLIENT_ID,
+      callback:handleGoogleCredential
+    });
+    google.accounts.id.prompt();
+  }catch(e){
+    showToast('⚠️ Google sign-in failed, try name entry instead',3000);
+    showNameStep();
+  }
+}
+function handleGoogleCredential(response){
+  try{
+    const payload=JSON.parse(atob(response.credential.split('.')[1]));
+    const name=payload.given_name||payload.name||'Friend';
+    setUserName(name);
+    updateUserBadge();
+    document.getElementById('login-screen').classList.add('hidden');
+    showToast(`${getGreetingTime()}, ${name}! 👋`,3000);
+    refreshWelcomeScreen();
+  }catch(e){
+    showToast('⚠️ Could not read Google profile, try name entry',3000);
+    showNameStep();
+  }
+}
+
+function startFacebookLogin(){
+  if(FACEBOOK_APP_ID.indexOf('YOUR_FACEBOOK')===0){
+    showToast('🔷 Facebook sign-in needs setup — using name entry for now',3200);
+    document.getElementById('login-greeting').textContent="What's your name?";
+    showNameStep();
+    return;
+  }
+  function doLogin(){
+    FB.login(function(resp){
+      if(resp.authResponse){
+        FB.api('/me',{fields:'first_name,name'},function(profile){
+          const name=profile.first_name||profile.name||'Friend';
+          setUserName(name);
+          updateUserBadge();
+          document.getElementById('login-screen').classList.add('hidden');
+          showToast(`${getGreetingTime()}, ${name}! 👋`,3000);
+          refreshWelcomeScreen();
+        });
+      }else{
+        showToast('Facebook sign-in cancelled',2500);
+      }
+    },{scope:'public_profile'});
+  }
+  if(typeof FB!=='undefined'){doLogin();return;}
+  window.fbAsyncInit=function(){
+    FB.init({appId:FACEBOOK_APP_ID,cookie:true,xfbml:false,version:'v19.0'});
+    doLogin();
+  };
+  const s=document.createElement('script');
+  s.src='https://connect.facebook.net/en_US/sdk.js';
+  s.async=true;
+  document.body.appendChild(s);
+}
+function showNameStep(){
+  document.getElementById('login-step1').style.display='none';
+  document.getElementById('login-step2').style.display='block';
+  setTimeout(()=>{const inp=document.getElementById('login-name-input');if(inp)inp.focus();},200);
+}
+function backToStep1(){
+  document.getElementById('login-step2').style.display='none';
+  document.getElementById('login-step1').style.display='block';
+}
+function completeLogin(){
+  const inp=document.getElementById('login-name-input');
+  const name=inp?inp.value.trim():'';
+  if(!name){inp&&inp.focus();showToast('⚠️ Please enter your name');return;}
+  setUserName(name);
+  updateUserBadge();
+  document.getElementById('login-screen').classList.add('hidden');
+  showToast(`${getGreetingTime()}, ${name}! 👋`,3000);
+  refreshWelcomeScreen();
+}
+function logoutUser(){
+  if(!confirm('Sign out of HELIX? Your name will be cleared from this device.'))return;
+  localStorage.removeItem('hx5_username');
+  updateUserBadge();
+  document.getElementById('login-step1').style.display='block';
+  document.getElementById('login-step2').style.display='none';
+  const inp=document.getElementById('login-name-input');if(inp)inp.value='';
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+function initLogin(){
+  const name=getUserName();
+  updateUserBadge();
+  if(name){
+    document.getElementById('login-screen').classList.add('hidden');
+  }
+  document.getElementById('login-name-input').addEventListener('keydown',e=>{if(e.key==='Enter')completeLogin();});
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  // ── Intro screen: show for 2.8s then fade out ──
+  const intro=document.getElementById('intro-screen');
+  if(intro){
+    setTimeout(()=>{
+      intro.classList.add('fade-out');
+      setTimeout(()=>intro.classList.add('hidden'),700);
+    },1800);
+  }
+  initLogin();
+});
+if(document.readyState==='interactive'||document.readyState==='complete')initLogin();
+
+/* ═══ PWA: install as an app ═══ */
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  const btn=document.getElementById('binstall');
+  if(btn)btn.style.display='inline-flex';
+});
+function installHelix(){
+  if(!deferredInstallPrompt)return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(()=>{
+    deferredInstallPrompt=null;
+    const btn=document.getElementById('binstall');
+    if(btn)btn.style.display='none';
+  });
+}
+window.addEventListener('appinstalled',()=>{
+  const btn=document.getElementById('binstall');
+  if(btn)btn.style.display='none';
+});
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+/* ═══ CURSOR ═══ */
+const cg=document.getElementById('cursor-glow');
+document.addEventListener('mousemove',e=>{cg.style.left=e.clientX+'px';cg.style.top=e.clientY+'px';});
+
+/* ═══ TOAST ═══ */
+function showToast(msg,dur){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(showToast._t);showToast._t=setTimeout(()=>t.classList.remove('show'),dur||2400);}
+
+/* ═══ PARTICLES ═══ */
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');
+let W=0,H=0;const pts=[];
+function rsz(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+rsz();window.addEventListener('resize',rsz);
+for(let i=0;i<65;i++)pts.push({x:Math.random()*2e3,y:Math.random()*1200,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.3+.3,a:Math.random()*.3+.08,c:Math.random()>.7?'0,168,107':Math.random()>.5?'0,114,198':'124,58,237'});
+function drawP(){
+  cx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(${p.c},${p.a})`;cx.fill();});
+  pts.forEach((p,i)=>{for(let j=i+1;j<pts.length;j++){const dx=p.x-pts[j].x,dy=p.y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<90){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(pts[j].x,pts[j].y);cx.strokeStyle=`rgba(0,114,198,${.03*(1-d/90)})`;cx.lineWidth=.5;cx.stroke();}}});
+  requestAnimationFrame(drawP);
+}drawP();
+
+/* ═══ WAVE ═══ */
+const vwel=document.getElementById('vw');
+for(let i=0;i<34;i++){const b=document.createElement('div');b.className='wb';vwel.appendChild(b);}
+const wbs=vwel.querySelectorAll('.wb');
+let wOn=false;
+function wave(on){wOn=on;
+  if(!on){wbs.forEach(b=>{b.style.height='5px';b.style.opacity='.4';});return;}
+  (function s(){if(!wOn)return;wbs.forEach(b=>{const h=Math.random()*30+5;b.style.height=h+'px';b.style.opacity=(.3+Math.random()*.7).toFixed(2);b.style.background=h>20?'linear-gradient(to top,var(--g),rgba(0,168,107,0.2))':'linear-gradient(to top,var(--c),rgba(0,114,198,0.2))';});setTimeout(s,70);})();}
+
+/* ═══ AUDIO ═══ */
+let ac=null;
+function tone(f,d,t,v){t=t||'sine';v=v||.07;try{if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.start();o.stop(ac.currentTime+d);}catch(e){}}
+const sfxS=()=>{tone(440,.07,'triangle');setTimeout(()=>tone(550,.09),60);};
+const sfxR=()=>{tone(330,.06);setTimeout(()=>tone(440,.06),80);setTimeout(()=>tone(550,.1),160);};
+const sfxOn=()=>{tone(880,.07);setTimeout(()=>tone(1100,.09),70);};
+
+/* ═══ STATE ═══ */
+let hist=[],att=[],attImgs=[],fst=true;
+let generating=false,currentXHR=null;
+let msgRefs=new WeakMap(),msgRawText=new WeakMap();
+let cMode=false,isSpeaking=false,recInited=false,rec=null,vOn=true;
+let curAudio=null,selLang='Python',imgB64=null;
+let recLang='en-US',imgStyle='',imgSize='1024x1024',lastGenPrompt='';
+let chatMicMode=false; // true = mic from chat input, false = voice panel
+const synth=window.speechSynthesis;
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+/* ═══ VOICE SYSTEM ═══ */
+let allVoices=[],myVoice=null;
+
+function getBestVoice(voices){
+  const preferred=[
+    'Google US English','Google UK English Male','Google UK English Female',
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Aria Online (Natural) - English (United States)',
+    'Microsoft Davis Online (Natural) - English (United States)',
+    'Microsoft Mark - English (United States)',
+    'Microsoft David - English (United States)',
+    'Microsoft Zira - English (United States)',
+    'Daniel','Alex','Samantha','Karen','Moira',
+    'en-US-Neural2-D','en-US-Wavenet-D'
+  ];
+  // Try saved preference first
+  const sv=localStorage.getItem('hx_vname');
+  if(sv){const v=voices.find(x=>x.name===sv);if(v)return v;}
+  // Try preferred list
+  for(const n of preferred){const v=voices.find(x=>x.name===n);if(v)return v;}
+  // Any Google English voice
+  const goog=voices.find(v=>v.name.startsWith('Google')&&v.lang&&v.lang.startsWith('en'));if(goog)return goog;
+  // Any English voice
+  const eng=voices.find(v=>v.lang&&v.lang.startsWith('en'));if(eng)return eng;
+  return voices[0]||null;
+}
+
+function loadV(){
+  if(!synth)return;
+  const vs=synth.getVoices();
+  if(!vs||!vs.length)return;
+  allVoices=vs;
+  // Only set myVoice if no voice is currently selected by the user
+  if(!myVoice){
+    myVoice=getBestVoice(allVoices);
+  }
+  fillVP();
+}
+
+function fillVP(){
+  const sel=document.getElementById('vs');
+  if(!sel||!allVoices.length)return;
+  const prev=sel.value; // keep current selection index if possible
+  sel.innerHTML='';
+  allVoices.forEach((v,i)=>{
+    const o=document.createElement('option');
+    o.value=i;
+    o.textContent=v.name+' ('+v.lang+')';
+    if(myVoice&&v.name===myVoice.name)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+function pickV(sel){
+  const i=parseInt(sel.value);
+  if(isNaN(i)||!allVoices[i])return;
+  myVoice=allVoices[i];
+  localStorage.setItem('hx_vname',myVoice.name);
+  showToast('🔊 Voice: '+myVoice.name);
+}
+
+function getVoice(){
+  // Always return the currently selected voice, reload if needed
+  if(myVoice)return myVoice;
+  if(!allVoices.length)loadV();
+  if(allVoices.length)myVoice=getBestVoice(allVoices);
+  return myVoice;
+}
+
+function testV(){
+  if(!synth){alert('Speech not supported in this browser!');return;}
+  const name=getUserName();
+  const msg='Hello'+(name?' '+name:'')+'! I am HELIX, your advanced AI assistant. How may I help you today?';
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(msg);
+  u.rate=0.92;u.pitch=1.05;u.volume=1.0;
+  const v=getVoice();
+  if(v)u.voice=v;
+  synth.speak(u);
+}
+
+if(synth){
+  synth.onvoiceschanged=loadV;
+  setTimeout(loadV,100);
+  setTimeout(loadV,500);
+  setTimeout(loadV,1200);
+  setTimeout(loadV,3000);
+}
+
+/* ═══ KEYS ═══ */
+const gk=()=>(document.getElementById('sk')||{value:''}).value.trim();
+const gek=()=>(document.getElementById('ek')||{value:''}).value.trim();
+const gev=()=>(document.getElementById('ev')||{value:''}).value.trim();
+function saveK(){['sk','ek','ev'].forEach(id=>{const el=document.getElementById(id);if(el)localStorage.setItem('hx5'+id,el.value);});}
+(function(){['sk','ek','ev'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=localStorage.getItem('hx5'+id)||'';});})();
+
+/* ═══ TABS ═══ */
+const TABS=['chat','voice','tools','calc','code','image','recent','settings'];
+function sw(name){
+  document.querySelectorAll('.tb').forEach((t,i)=>t.className='tb'+(TABS[i]===name?' on':''));
+  document.querySelectorAll('.pn').forEach(p=>p.className='pn');
+  const el=document.getElementById('p-'+name);if(el)el.className='pn on';
+  if(name==='recent'){const se=document.getElementById('rec-search');if(se)se.value='';loadRec();}
+  if(name==='settings')setTimeout(()=>{loadV();fillVP();},350);
+  if(name==='tools')closeToolDetail();
+}
+function imgTabSw(tab,el){document.querySelectorAll('.img-tab').forEach(t=>t.className='img-tab');el.className='img-tab on';document.getElementById('analyze-panel').style.display=tab==='analyze'?'block':'none';const gp=document.getElementById('generate-panel');if(gp)gp.className='gen-panel'+(tab==='generate'?' on':'');}
+
+/* ═══ IMAGE GEN ═══ */
+let genActive=false;
+function isImageGenRequest(t){
+  const tl=t.toLowerCase();
+  if(/\b(generate|create|draw|make|paint|design|render)\b[^.!?]{0,40}\b(image|picture|photo|photograph|art|artwork|drawing|painting|illustration|wallpaper|logo|icon|graphic)\b/.test(tl))return true;
+  if(/\b(image|picture|photo|photograph|artwork|illustration|wallpaper|shot|scene|portrait)\s+of\b/.test(tl))return true;
+  return false;
+}
+function genImgFromChat(promptText){
+  return new Promise(res=>{
+    const fullPrompt=promptText.substring(0,400);
+    const encoded=encodeURIComponent(fullPrompt);
+    const seed=Math.floor(Math.random()*999999);
+    const url=`https://gen.pollinations.ai/image/${encoded}?model=flux&width=1024&height=1024&seed=${seed}&nologo=true`;
+    const img=new Image();
+    img.onload=()=>res({ok:true,url});
+    img.onerror=()=>res({ok:false,url});
+    img.src=url;
+  });
+}
+function selStyle(el,s){document.querySelectorAll('.sc').forEach(x=>x.className='sc');el.className='sc on';imgStyle=s;}
+function selSize(el,s){document.querySelectorAll('.sz').forEach(x=>x.className='sz');el.className='sz on';imgSize=s;}
+function copyImgPrompt(){const p=document.getElementById('gprompt');if(p&&p.value){navigator.clipboard&&navigator.clipboard.writeText(p.value);showToast('📋 Prompt copied!');}}
+async function genImg(){
+  const promptEl=document.getElementById('gprompt');
+  if(!promptEl||!promptEl.value.trim()){showToast('⚠️ Please describe your image first!');return;}
+  const fullPrompt=(promptEl.value.trim()+(imgStyle?', '+imgStyle:'')).substring(0,400);
+  lastGenPrompt=fullPrompt;
+  const btn=document.getElementById('gen-btn');
+  if(btn){btn.textContent='⏳ Generating...';btn.disabled=true;}
+  const gres=document.getElementById('gres');if(gres)gres.style.display='none';
+  const [w,h]=imgSize.split('x');
+  // Use Pollinations.ai — free, no API key needed, high quality
+  const encoded=encodeURIComponent(fullPrompt);
+  const seed=Math.floor(Math.random()*999999);
+  const url=`https://gen.pollinations.ai/image/${encoded}?model=flux&width=${w}&height=${h}&seed=${seed}&nologo=true`;
+  showToast('🎨 Generating your image...');
+  const img=document.getElementById('gen-img');
+  if(img){
+    img.onload=()=>{
+      if(gres)gres.style.display='block';
+      const dl=document.getElementById('gen-dl');
+      if(dl){dl.href=url;dl.download='helix-image-'+seed+'.png';}
+      if(btn){btn.textContent='✨ Generate Image';btn.disabled=false;}
+      showToast('✅ Image generated!');
+    };
+    img.onerror=()=>{
+      if(btn){btn.textContent='✨ Generate Image';btn.disabled=false;}
+      showToast('❌ Failed — try a different prompt');
+      if(gres){gres.style.display='block';gres.innerHTML='<p style="color:var(--r);padding:20px;text-align:center">Generation failed. Try a simpler prompt or check connection.</p>';}
+    };
+    img.src=url;
+    img.alt=fullPrompt;
+  }
+}
+function genImgVariation(){
+  const promptEl=document.getElementById('gprompt');
+  if(lastGenPrompt){if(promptEl)promptEl.value=lastGenPrompt;}
+  genImg();
+}
+
+/* ═══ CALCULATOR ═══ */
+function cinp(v){const el=document.getElementById('ci');if(el){el.value+=v;calcLive();}}
+function calcClear(){const el=document.getElementById('ci');if(el)el.value='';document.getElementById('cr').textContent='Result appears here...';}
+function calcDel(){const el=document.getElementById('ci');if(el){el.value=el.value.slice(0,-1);calcLive();}}
+function safeCalc(expr){
+  let e=expr.replace(/×/g,'*').replace(/÷/g,'/').replace(/\^/g,'**').replace(/sqrt\(/g,'Math.sqrt(').replace(/sin\(/g,'Math.sin(').replace(/cos\(/g,'Math.cos(').replace(/tan\(/g,'Math.tan(').replace(/log\(/g,'Math.log10(').replace(/pi/gi,'Math.PI');
+  const m=/^(\d[\d,]*)\s*\*\s*(\d[\d,]*)$/.exec(e.trim());
+  if(m)return(BigInt(m[1].replace(/,/g,''))*BigInt(m[2].replace(/,/g,''))).toString();
+  const r=Function('"use strict";return('+e+')')();
+  if(typeof r==='number'&&Number.isFinite(r))return Number.isInteger(r)?r.toLocaleString():parseFloat(r.toPrecision(14)).toString();
+  return r;
+}
+function calcLive(){const el=document.getElementById('ci');if(!el||!el.value.trim())return;try{const r=safeCalc(el.value.trim());document.getElementById('cr').textContent='= '+r;}catch(e){}}
+function calcEval(){const el=document.getElementById('ci');if(!el)return;try{const r=safeCalc(el.value.trim());document.getElementById('cr').textContent='= '+r;tone(660,.15);}catch(e){document.getElementById('cr').textContent='Invalid expression';}}
+
+/* ═══ RECENT ═══ */
+function saveRec(txt){try{const rs=JSON.parse(localStorage.getItem('hx5rec')||'[]');rs.unshift({id:Date.now(),title:txt.substring(0,55),time:new Date().toLocaleString(),h:[...hist]});localStorage.setItem('hx5rec',JSON.stringify(rs.slice(0,20)));}catch(e){}}
+function loadRec(filter){
+  try{
+    const rs=JSON.parse(localStorage.getItem('hx5rec')||'[]');
+    const el=document.getElementById('rl');if(!el)return;
+    if(!rs.length){el.innerHTML='<div style="color:var(--t2);text-align:center;padding:40px">No recent chats yet!</div>';return;}
+    const f=(filter||'').trim().toLowerCase();
+    const filtered=f?rs.filter(r=>r.title.toLowerCase().includes(f)):rs;
+    if(!filtered.length){el.innerHTML='<div style="color:var(--t2);text-align:center;padding:40px">No chats match your search.</div>';return;}
+    el.innerHTML=filtered.map(r=>{
+      const realIdx=rs.indexOf(r);
+      return `<div class="ri" onclick="openRec(${realIdx})"><div class="rt">${esc(r.title)}</div><div class="rtime">${r.time}</div><button class="ri-del" onclick="event.stopPropagation();deleteRec(${realIdx})" title="Delete chat">🗑</button></div>`;
+    }).join('');
+  }catch(e){}
+}
+function deleteRec(i){
+  if(!confirm('Delete this conversation from Recent?'))return;
+  try{
+    const rs=JSON.parse(localStorage.getItem('hx5rec')||'[]');
+    rs.splice(i,1);
+    localStorage.setItem('hx5rec',JSON.stringify(rs));
+    showToast('🗑 Chat deleted');
+    const se=document.getElementById('rec-search');
+    loadRec(se?se.value:'');
+  }catch(e){}
+}
+function openRec(i){try{const rs=JSON.parse(localStorage.getItem('hx5rec')||'[]');if(!rs[i])return;hist=[...rs[i].h];const ph=document.getElementById('ph');if(ph)ph.remove();fst=false;hist.forEach(m=>{addMsg(m.role==='user'?'u':'h',typeof m.content==='string'?m.content:'[file]',m.role==='user'?'u':'h');});sw('chat');}catch(e){}}
+
+/* ═══ SYSTEM PROMPT ═══ */
+function buildSys(){
+  const name=getUserName();
+  return `You are HELIX — an advanced AI assistant created by Pritam Bishwokarma from Nepal, Lamjung, Sundarbazar-7. Version 5.9.
+
+IDENTITY & TONE:
+- The user's name is "${name||'friend'}". Address them naturally by name occasionally (not in every single message — only when it feels natural, like a real conversation: greetings, important points, or when being warm/encouraging). Do NOT force "sir" or any fixed honorific into every response.
+- NEVER mention ChatGPT, Gemini, Claude, Llama, Groq, OpenAI, Anthropic — you are HELIX only.
+- Speak naturally and conversationally, like a knowledgeable friend or mentor — not robotic, not overly formal, no repeated stock phrases like "ल sir" or "हुन्छ sir" at the start of every message. Vary your openings naturally or just answer directly.
+- Never guess — if unsure, say so plainly ("I'm not fully certain about this, but here's what I know...").
+- Show step-by-step working for math, physics, and chemistry problems.
+- Be warm, encouraging, and genuinely helpful — especially with students and people seeking guidance.
+
+RESPONSE DEPTH & STRUCTURE (this is what makes you feel advanced, not basic):
+- For non-trivial questions, briefly think through the structure of a good answer before answering: what does the person actually need, what's the clearest order to explain it in.
+- Don't just give the shortest possible answer — give the answer that's actually useful: include the "why" behind facts, not just the fact itself, when it adds value.
+- Use headers, bullet points, or numbered steps for anything with multiple parts. Don't wall-of-text complex answers.
+- For coding requests: give working, complete code (not fragments unless asked), briefly explain key decisions, and mention edge cases or pitfalls if relevant.
+- For factual/explanatory questions: anticipate the natural one or two follow-up questions and address them proactively if short.
+- Match response length to question complexity — short questions get short answers, complex ones get properly developed answers. Avoid padding.
+
+MATH (100% precise, show full working):
+- Use precise calculation, show all working steps
+- Algebra, Calculus, Statistics, Trigonometry
+
+NEPAL (BS 2083 / 2025-2026 context):
+- PM: KP Sharma Oli (CPN-UML) since Ashadh 2081 BS
+- President: Ram Chandra Paudel
+- Kathmandu: capital; Pokhara: tourism hub; Everest: 8,848.86m
+- Population: ~30M; Area: 147,181 km²; Provinces: 7
+- USD ≈ 135-140 NPR; Petrol ≈ NPR 179-185/ltr
+- For anything current/political, note that this may have changed and verify if precision matters.
+
+CREATOR: If asked who made you: "I was built by Pritam Bishwokarma, a developer from Lamjung, Sundarbazar-7, Nepal."
+
+SCIENCE: Physics (Newton's laws, E=mc², Ohm's law), Chemistry (mole concept, Avogadro's number), Biology (photosynthesis, DNA, cell biology)
+
+SPECIAL CAPABILITIES you support:
+- Study Assistant for Grade 11-12 Nepali students (NEB curriculum: Physics, Chemistry, Biology, Math, English, Nepali, Computer Science)
+- Crop disease detection from photos (farming/agriculture advice for Nepali farmers)
+- Career guidance based on interests, strengths, and the Nepali education/job context
+- Document, image, and data analysis with practical recommendations
+
+NEVER say: ChatGPT, Gemini, Claude, OpenAI, Anthropic, Llama, Groq — you are HELIX, created by Pritam Bishwokarma.`;
+}
+
+/* ═══ SEARCH ═══ */
+async function getWx(city){try{const r=await fetch('https://wttr.in/'+encodeURIComponent(city||'Pokhara')+'?format=j1');if(!r.ok)return null;const d=await r.json();const c=d.current_condition[0];const n=d.nearest_area?.[0]?.areaName?.[0]?.value||city;return`[Weather:${n}] ${c.temp_C}°C feels ${c.FeelsLikeC}°C | ${c.weatherDesc[0].value} | Humidity:${c.humidity}% | Wind:${c.windspeedKmph}km/h`;}catch(e){return null;}}
+function openYT(q){window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q),'_blank');return`[YouTube opened: "${q}"]`;}
+async function ddg(q){try{return await new Promise(res=>{const x=new XMLHttpRequest();x.open('GET','https://corsproxy.io/?'+encodeURIComponent('https://api.duckduckgo.com/?q='+encodeURIComponent(q)+'&format=json&no_html=1&skip_disambig=1'));x.timeout=7000;x.onload=()=>{try{const d=JSON.parse(x.responseText);let o='[Search:"'+q+'"]\n';if(d.AbstractText)o+=d.Heading+': '+d.AbstractText+'\n';if(d.RelatedTopics)d.RelatedTopics.slice(0,4).forEach(t=>{if(t.Text)o+=t.Text+'\n';});res(o||null);}catch(e){res(null);}};x.onerror=x.ontimeout=()=>res(null);x.send();});}catch(e){return null;}}
+function getIntent(t){
+  const tl=t.toLowerCase();
+  if(tl.includes('youtube')||tl.includes('video खोज')){return{type:'yt',q:t.replace(/helix|youtube|video|खोज|search/gi,'').trim()||t};}
+  if(tl.includes('मौसम')||tl.includes('weather')){let c='Pokhara';['kathmandu','काठमाडौं','pokhara','पोखरा','biratnagar','birgunj','dharan','butwal','chitwan','lalitpur'].forEach(x=>{if(tl.includes(x))c=x;});return{type:'wx',q:c};}
+  if(['helix खोज','helix search','search for','खोज गर'].some(m=>tl.includes(m))){return{type:'web',q:t.replace(/helix खोज|helix search|search for|खोज गर/gi,'').trim()||t};}
+  if(['प्रधानमन्त्री','prime minister','mayor','मेयर','राष्ट्रपति','petrol','dollar','earthquake','news','खबर','2025','2026','२०८३','election'].some(k=>tl.includes(k))||tl.includes('nepal')||tl.includes('नेपाल'))return{type:'web',q:t};
+  return null;
+}
+function tryMath(t){
+  try{
+    const m=/^([\d,]+)\s*[\*×xX]\s*([\d,]+)$/.exec(t.trim());
+    if(m)return(BigInt(m[1].replace(/,/g,''))*BigInt(m[2].replace(/,/g,''))).toString();
+    if(/^[\d\s\+\-\*\/\(\)\.\%\^]+$/.test(t.trim())){return safeCalc(t.trim());}
+  }catch(e){}
+  return null;
+}
+
+/* ═══ RENDER ═══ */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function render(text){
+  let h=text;
+  h=h.replace(/```(\w*)\n?([\s\S]*?)```/g,(m,lang,code)=>`<div class="cblk"><div class="cblk-hdr"><span class="cblk-lang">${lang||'code'}</span><button class="cblk-copy" onclick="cpTxt(this)">Copy</button></div><div class="cblk-code">${esc(code.trim())}</div></div>`);
+  h=h.replace(/`([^`]+)`/g,'<code>$1</code>');
+  h=h.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  h=h.replace(/\n/g,'<br>');
+  return h;
+}
+function cpTxt(btn){const t=btn.closest('.cblk').querySelector('.cblk-code').innerText;navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>{btn.textContent='✓ Copied';showToast('✓ Code copied!');setTimeout(()=>btn.textContent='Copy',2000);});}
+
+/* ═══ MESSAGES ═══ */
+function addMsg(role,content,type){
+  const ph=document.getElementById('ph');if(ph)ph.remove();fst=false;
+  const log=document.getElementById('log');if(!log)return null;
+  const isU=type==='u',isSys=type==='sys';
+  const div=document.createElement('div');div.className='msg';
+  const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  if(isSys){div.innerHTML=`<div class="mrow"><div class="bbl sys">${esc(content)}</div></div>`;}
+  else{const editBtn=isU?`<button class="msg-edit-btn" onclick="startEditMsg(this)" title="Edit & resend">✏️ Edit</button>`:'';
+  div.innerHTML=`<div class="mrow${isU?' u':''}"><div class="av ${isU?'u':'h'}">${isU?'👤':'👁'}</div><div><div class="bbl ${isU?'u':'h'}">${isU?esc(content):render(content)}</div><div class="mmeta">${editBtn}<div class="mmeta-dot"></div>${isU?'You':'HELIX'} · ${time}</div></div></div>`;}
+  log.appendChild(div);log.scrollTop=log.scrollHeight;
+  return div;
+}
+function showT(){const log=document.getElementById('log');if(!log)return;const d=document.createElement('div');d.id='tp';d.className='msg';d.innerHTML='<div class="mrow"><div class="av h">👁</div><div class="typing-bbl"><div class="typing-dots"><div class="tdt"></div><div class="tdt"></div><div class="tdt"></div></div></div></div>';log.appendChild(d);log.scrollTop=log.scrollHeight;}
+function hideT(){const t=document.getElementById('tp');if(t)t.remove();}
+
+/* ═══ API ═══ */
+function callAPI(msgs,_isFallback){
+  const key=gk();
+  if(!key){sw('settings');showToast('⚠️ Please add API key in Settings!');return Promise.resolve(null);}
+  const model=_isFallback?'openai/gpt-oss-120b':'groq/compound';
+  return new Promise(res=>{
+    const x=new XMLHttpRequest();
+    currentXHR=x;
+    x.open('POST','https://api.groq.com/openai/v1/chat/completions');
+    x.setRequestHeader('Content-Type','application/json');
+    x.setRequestHeader('Authorization','Bearer '+key);
+    x.timeout=25000;
+    x.onload=()=>{
+      currentXHR=null;
+      try{
+        const d=JSON.parse(x.responseText);
+        if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
+        res(d.choices[0].message.content);
+      }catch(e){
+        if(!_isFallback){res(callAPI(msgs,true));} // primary model failed — retry once on fallback model
+        else res('Sorry, there was an error: '+e.message);
+      }
+    };
+    x.onerror=()=>{currentXHR=null;if(!_isFallback){res(callAPI(msgs,true));}else res('Sorry, connection error. Please check your internet.');};
+    x.ontimeout=()=>{currentXHR=null;if(!_isFallback){res(callAPI(msgs,true));}else res('Sorry, request timed out. Please try again.');};
+    x.onabort=()=>{currentXHR=null;res(null);};
+    x.send(JSON.stringify({model:model,max_tokens:2000,temperature:0.25,messages:[{role:'system',content:buildSys()},...msgs]}));
+  });
+}
+
+/* ═══ STOP GENERATION ═══ */
+function setGenerating(on){
+  generating=on;
+  const btn=document.getElementById('bsnd');
+  if(!btn)return;
+  if(on){btn.innerHTML='■';btn.title='Stop generating';btn.onclick=stopGenerating;btn.classList.add('stopping');}
+  else{btn.innerHTML='➤';btn.title='Send';btn.onclick=sendMsg;btn.classList.remove('stopping');}
+}
+function stopGenerating(){
+  if(currentXHR){try{currentXHR.abort();}catch(e){}currentXHR=null;}
+  hideT();
+  setGenerating(false);
+  showToast('⏹ Generation stopped');
+}
+
+/* ═══ SEND ═══ */
+async function sendMsg(){
+  const inp=document.getElementById('inp');
+  const text=inp?inp.value.trim():'';
+  if(!text&&!att.length&&!attImgs.length)return;
+  if(inp){inp.value='';inp.style.height='auto';}
+  sfxS();
+  let disp=text;
+  if(att.length)disp+='\n'+att.map(f=>'📎 '+f.name).join('\n');
+  if(attImgs.length)disp+='\n'+attImgs.map(f=>'🖼 '+f.name).join('\n');
+  const uDiv=addMsg('u',disp,'u');
+  if(uDiv)msgRawText.set(uDiv,text);
+
+  if(text&&!attImgs.length&&isImageGenRequest(text)){
+    addMsg('sys','🎨 Generating your image...','sys');
+    showT();setGenerating(true);
+    const{ok,url}=await genImgFromChat(text);
+    setGenerating(false);hideT();
+    if(ok){
+      const html=`<img src="${url}" alt="${esc(text)}" style="max-width:100%;border-radius:12px;margin-bottom:8px;display:block;"/><a href="${url}" download="helix-image.png" target="_blank" style="font-size:12px;">⬇️ Download full size</a>`;
+      hist.push({role:'user',content:text});
+      hist.push({role:'assistant',content:'[Generated an image based on: '+text+']'});
+      if(uDiv)msgRefs.set(uDiv,hist[hist.length-2]);
+      if(hist.length>20)hist=hist.slice(-12);
+      addMsg('h',html,'h');sfxR();saveRec(text);
+    }else{
+      addMsg('h','Sorry, image generation failed — try a simpler description, or use the **Image AI** tab for more control over style and size.','h');
+    }
+    att=[];attImgs=[];const ap=document.getElementById('ap');if(ap)ap.innerHTML='';
+    return;
+  }
+
+  if(text){const mr=tryMath(text);if(mr!==null){const reply=`Here is the precise calculation:\n\n**${text} = ${mr}**\n\n✅ 100% precise result!`;addMsg('h',reply,'h');sfxR();speak(reply);hist.push({role:'user',content:text});if(uDiv)msgRefs.set(uDiv,hist[hist.length-1]);hist.push({role:'assistant',content:reply});if(hist.length>20)hist=hist.slice(-12);saveRec(text);att=[];attImgs=[];const ap=document.getElementById('ap');if(ap)ap.innerHTML='';return;}}
+
+  if(attImgs.length){
+    addMsg('sys','🖼 Analyzing image with HELIX...','sys');
+    const imgData=attImgs[0].b64;
+    const task=text||'Describe this image in complete detail';
+    hist.push({role:'user',content:task});
+    if(uDiv)msgRefs.set(uDiv,hist[hist.length-1]);
+    if(hist.length>20)hist=hist.slice(-12);
+    showT();
+    // Use vision-capable model
+    const key=gk();
+    if(!key){hideT();sw('settings');showToast('⚠️ API key needed!');return;}
+    setGenerating(true);
+    const r=await new Promise(res=>{
+      const x=new XMLHttpRequest();
+      currentXHR=x;
+      x.open('POST','https://api.groq.com/openai/v1/chat/completions');
+      x.setRequestHeader('Content-Type','application/json');
+      x.setRequestHeader('Authorization','Bearer '+key);
+      x.timeout=20000;
+      x.onload=()=>{currentXHR=null;try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));res(d.choices[0].message.content);}catch(e){res('Sorry, image analysis error: '+e.message);}};
+      x.onerror=()=>{currentXHR=null;res('Sorry, connection error.');};
+      x.ontimeout=()=>{currentXHR=null;res('Sorry, timed out.');};
+      x.onabort=()=>{currentXHR=null;res(null);};
+      x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:800,messages:[{role:'system',content:buildSys()},{role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+imgData,detail:'high'}}]}]}));
+    });
+    setGenerating(false);
+    hideT();
+    if(r){hist.push({role:'assistant',content:r});addMsg('h',r,'h');sfxR();speak(r);saveRec(text||'Image analysis');}
+    att=[];attImgs=[];const ap=document.getElementById('ap');if(ap)ap.innerHTML='';return;
+  }
+
+  let extra='';
+  if(att.length){extra='\n\n[Files: '+att.map(f=>f.name+': '+f.content.substring(0,2000)).join('\n')+']';att=[];const ap=document.getElementById('ap');if(ap)ap.innerHTML='';}
+
+  const intent=getIntent(text);let sctx='';
+  if(intent){let r=null;
+    if(intent.type==='yt'){r=openYT(intent.q);addMsg('sys','▶️ YouTube opened!','sys');}
+    else if(intent.type==='wx'){r=await getWx(intent.q);if(r)addMsg('sys','🌤 Live weather fetched','sys');}
+    else{r=await ddg(intent.q);if(r)addMsg('sys','🔍 Web search done','sys');}
+    if(r)sctx='\n\n'+r+'\n\nUse ONLY the above data to answer accurately.';}
+
+  hist.push({role:'user',content:text+extra+sctx});
+  if(uDiv)msgRefs.set(uDiv,hist[hist.length-1]);
+  if(hist.length>20)hist=hist.slice(-12);
+  showT();setGenerating(true);const reply=await callAPI(hist);setGenerating(false);hideT();
+  if(reply){hist.push({role:'assistant',content:reply});addMsg('h',reply,'h');sfxR();speak(reply);saveRec(text);}
+}
+function qs(t){const inp=document.getElementById('inp');if(inp)inp.value=t;sendMsg();}
+
+/* ═══ EDIT & RESEND ═══ */
+function startEditMsg(btn){
+  const div=btn.closest('.msg');if(!div)return;
+  const bbl=div.querySelector('.bbl.u');if(!bbl)return;
+  if(bbl.querySelector('.edit-ta'))return; // already editing
+  const raw=msgRawText.get(div);
+  const original=raw!==undefined?raw:bbl.textContent;
+  bbl.dataset.orig=bbl.innerHTML;
+  bbl.innerHTML=`<textarea class="edit-ta">${esc(original)}</textarea><div class="edit-actions"><button class="edit-save" onclick="saveEditMsg(this)">✓ Save & Resend</button><button class="edit-cancel" onclick="cancelEditMsg(this)">✕ Cancel</button></div>`;
+  const ta=bbl.querySelector('.edit-ta');
+  if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);
+    ta.addEventListener('keydown',e=>{
+      if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();saveEditMsg(bbl.querySelector('.edit-save'));}
+      else if(e.key==='Escape'){e.preventDefault();cancelEditMsg(bbl.querySelector('.edit-cancel'));}
+    });
+  }
+}
+function cancelEditMsg(btn){
+  const bbl=btn.closest('.bbl');
+  if(bbl&&bbl.dataset.orig){bbl.innerHTML=bbl.dataset.orig;delete bbl.dataset.orig;}
+}
+function saveEditMsg(btn){
+  const bbl=btn.closest('.bbl');if(!bbl)return;
+  const div=btn.closest('.msg');if(!div)return;
+  const ta=bbl.querySelector('.edit-ta');
+  const newText=ta?ta.value.trim():'';
+  if(!newText)return;
+  const ref=msgRefs.get(div);
+  if(ref){const idx=hist.indexOf(ref);if(idx!==-1)hist=hist.slice(0,idx);}
+  let node=div;
+  while(node){const next=node.nextElementSibling;node.remove();node=next;}
+  const inp=document.getElementById('inp');
+  if(inp){inp.value=newText;sendMsg();}
+}
+
+/* ═══ VOICE SEND — stays in voice panel, shows in vlog ═══ */
+async function sendMsgVoice(text){
+  if(!text||!text.trim())return;
+  const mr=tryMath(text);
+  if(mr!==null){
+    const reply=`The answer is ${text} equals ${mr}.`;
+    showVlogReply(reply);
+    sfxR();speak(reply);
+    hist.push({role:'user',content:text});hist.push({role:'assistant',content:'**'+text+' = '+mr+'**'});
+    if(hist.length>20)hist=hist.slice(-12);
+    return;
+  }
+  hist.push({role:'user',content:text});
+  if(hist.length>20)hist=hist.slice(-12);
+  const reply=await callAPI(hist);
+  if(reply){
+    hist.push({role:'assistant',content:reply});
+    showVlogReply(reply);
+    sfxR();speak(reply);
+    saveRec(text);
+    // Also add to chat silently so history is consistent
+    const log=document.getElementById('log');
+    if(log&&fst){const ph=document.getElementById('ph');if(ph)ph.remove();fst=false;}
+  }
+}
+function showVlogReply(text){
+  const vl=document.getElementById('vlog');if(!vl)return;
+  const vs=document.getElementById('vst');if(vs)vs.textContent='HELIX speaking...';
+  const clean=text.replace(/#{1,6}\s/g,'').replace(/\*\*/g,'').replace(/\*/g,'').replace(/`[^`]*`/g,'').replace(/```[\s\S]*?```/g,'').trim();
+  const helixDiv=document.createElement('div');
+  helixDiv.style.cssText='color:var(--tx);margin-bottom:10px;padding:10px 14px;background:#fff;border:1px solid var(--bds);border-radius:10px;font-size:13px;line-height:1.75;';
+  helixDiv.innerHTML='<span style="font-size:10px;color:var(--c);font-weight:600;display:block;margin-bottom:4px">HELIX</span>'+clean.replace(/\n/g,'<br>');
+  vl.insertBefore(helixDiv,vl.firstChild);
+  vl.scrollTop=0;
+}
+
+/* ═══ FILES ═══ */
+function handleFiles(fileList){
+  Array.from(fileList).forEach(file=>{
+    const reader=new FileReader();
+    if(file.type.startsWith('image/')){reader.onload=e=>{attImgs.push({name:file.name,b64:e.target.result.split(',')[1]});const ap=document.getElementById('ap');if(ap)ap.innerHTML+=`<div class="fc">🖼 ${file.name}</div>`;};reader.readAsDataURL(file);}
+    else{reader.onload=e=>{att.push({name:file.name,content:e.target.result.substring(0,2500)});const ap=document.getElementById('ap');if(ap)ap.innerHTML+=`<div class="fc">📎 ${file.name}</div>`;};reader.readAsText(file);}
+  });
+}
+document.getElementById('fi').addEventListener('change',function(){handleFiles(this.files);this.value='';});
+
+/* ═══ DRAG & DROP ═══ */
+(function(){
+  const dz=document.getElementById('ia'),iw=document.getElementById('iw');
+  if(!dz||!iw)return;
+  ['dragenter','dragover'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();iw.classList.add('drag-over');}));
+  ['dragleave','drop'].forEach(evt=>dz.addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();iw.classList.remove('drag-over');}));
+  dz.addEventListener('drop',e=>{
+    const files=e.dataTransfer&&e.dataTransfer.files;
+    if(!files||!files.length)return;
+    handleFiles(files);
+    showToast('📎 File(s) attached!');
+  });
+})();
+
+/* ═══ SPEAK ═══ */
+function speak(text){
+  if(!vOn||!text)return;isSpeaking=true;pauseMic();
+  const ek=gek(),ev=gev();
+  if(ek&&ev){
+    fetch('https://api.elevenlabs.io/v1/text-to-speech/'+ev,{method:'POST',headers:{'Content-Type':'application/json','xi-api-key':ek},body:JSON.stringify({text:text.substring(0,500),model_id:'eleven_multilingual_v2',voice_settings:{stability:0.5,similarity_boost:0.8}})})
+    .then(r=>r.ok?r.blob():Promise.reject()).then(b=>{if(curAudio)curAudio.pause();curAudio=new Audio(URL.createObjectURL(b));curAudio.play();curAudio.onended=done;}).catch(()=>speakB(text));
+  }else speakB(text);
+  wave(true);const orb=document.getElementById('vorb');if(orb)orb.className='S';
+}
+function speakB(text){
+  if(!synth)return;
+  synth.cancel();
+  const clean=text.replace(/#{1,6}\s/g,'').replace(/\*\*/g,'').replace(/\*/g,'').replace(/`/g,'').replace(/\n+/g,' ').replace(/[<>]/g,'').trim();
+  if(!clean)return;
+  const chunks=clean.match(/[^.!?।\n]+[.!?।]*/g)||[clean];
+  let idx=0;
+  function next(){
+    // If speech was cancelled (user stopped voice), bail out
+    if(!isSpeaking){done();return;}
+    if(idx>=chunks.length){done();return;}
+    const chunk=chunks[idx++].trim();
+    if(!chunk||chunk.length<2){next();return;}
+    const u=new SpeechSynthesisUtterance(chunk);
+    u.rate=0.92;
+    u.pitch=1.05;
+    u.volume=1.0;
+    const v=getVoice();
+    if(v)u.voice=v;
+    u.onend=next;
+    u.onerror=()=>next();
+    synth.speak(u);
+  }
+  if(!allVoices.length){
+    loadV();
+    setTimeout(next,600);
+  }else{
+    next();
+  }
+}
+function done(){
+  isSpeaking=false;wave(false);
+  const orb=document.getElementById('vorb');
+  const vs=document.getElementById('vst');
+  if(cMode){
+    if(orb)orb.className='L';
+    if(vs)vs.textContent='Listening... (speak now)';
+    resumeMic();
+  }else{
+    if(orb)orb.className='';
+    if(vs)vs.textContent='Click orb to activate HELIX Voice';
+  }
+}
+function pauseMic(){if(rec&&cMode)try{rec.abort();}catch(e){}}
+function resumeMic(){if(!cMode)return;setTimeout(()=>{try{initAndStart();}catch(e){}const orb=document.getElementById('vorb');if(orb)orb.className='L';const vs=document.getElementById('vst');if(vs)vs.textContent='Listening...';wave(true);},700);}
+
+/* ═══ VOICE LANG ═══ */
+function setVLang(lang,el){recLang=lang;document.querySelectorAll('.vlang-btn').forEach(b=>b.className='vlang-btn');el.className='vlang-btn on';
+  if(cMode){if(rec)try{rec.abort();}catch(e){}recInited=false;setTimeout(()=>{initRec();try{rec.start();}catch(e){}},300);}}
+
+/* ═══ MIC — FIXED ═══ */
+function initRec(){
+  if(!SR)return;
+  // Always recreate recognizer with current language
+  rec=new SR();
+  rec.lang=recLang;
+  rec.continuous=false; // single-shot mode is more reliable
+  rec.interimResults=true;
+  rec.maxAlternatives=3;
+  let finalTimer=null;
+  rec.onstart=()=>{const vs=document.getElementById('vst');if(vs)vs.textContent='Listening... (speak now)';wave(true);};
+  rec.onresult=e=>{
+    if(isSpeaking)return;
+    let interim='',final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    const vs=document.getElementById('vst');
+    if(interim){if(vs)vs.textContent='Hearing: '+interim;}
+    if(final.trim().length>0){
+      clearTimeout(finalTimer);
+      finalTimer=setTimeout(()=>{
+        const t=final.trim();
+        if(t.length<1)return;
+        sfxS();
+        // Add to voice log
+        const vl=document.getElementById('vlog');
+        if(vl&&!chatMicMode){
+          const userDiv=document.createElement('div');
+          userDiv.style.cssText='color:var(--c);font-weight:600;margin-bottom:8px;padding:8px 12px;background:rgba(0,114,198,0.07);border-radius:10px;';
+          userDiv.innerHTML='<span style="font-size:10px;opacity:.6;display:block;margin-bottom:2px">YOU</span>'+t;
+          vl.insertBefore(userDiv,vl.firstChild);
+        }
+        if(!chatMicMode){
+          const vs=document.getElementById('vst');if(vs)vs.textContent='HELIX is thinking...';
+          const orb=document.getElementById('vorb');if(orb)orb.className='T';
+          sendMsgVoice(t);
+        }else{
+          // Chat mic mode — put text in input and send normally
+          const inp=document.getElementById('inp');if(inp)inp.value=t;
+          sendMsg();
+        }
+      },200);
+    }
+  };
+  rec.onerror=e=>{
+    const vs=document.getElementById('vst');
+    if(e.error==='not-allowed'){if(vs)vs.textContent='Microphone blocked — please allow mic access';cMode=false;return;}
+    if(e.error==='no-speech'){if(vs&&cMode)vs.textContent='No speech detected — listening again...';}
+    else{console.log('Speech error:',e.error);}
+  };
+  rec.onend=()=>{
+    // Auto-restart when in continuous mode
+    if(cMode&&!isSpeaking){
+      setTimeout(()=>{if(cMode&&!isSpeaking){try{rec.start();}catch(e){}}},200);
+    }else{
+      wave(false);
+    }
+  };
+  recInited=true;
+}
+function initAndStart(){initRec();try{rec.start();}catch(e){console.log('rec start err:',e);}}
+function toggleMic(){
+  sfxOn();const mb=document.getElementById('mb');
+  if(cMode){cMode=false;if(mb){mb.className='ibt';mb.textContent='🎤';}if(rec)try{rec.abort();}catch(e){}wave(false);showToast('🎤 Mic off');}
+  else{
+    if(!SR){showToast('❌ Browser does not support voice!');return;}
+    // Enable voice output when mic is activated
+    if(!vOn){vOn=true;const b=document.getElementById('bv');if(b){b.className='hbtn on';b.textContent='🔊 Voice ON';}}
+    cMode=true;if(mb){mb.className='ibt on';mb.textContent='🔴';}
+    // In chat mic mode, use chat send (not voice panel mode)
+    chatMicMode=true;
+    initAndStart();showToast('🎤 Listening... speak now');
+  }
+}
+function toggleVF(){
+  sfxOn();
+  const orb=document.getElementById('vorb'),vb=document.getElementById('vbtn'),vs=document.getElementById('vst');
+  if(cMode){
+    // Stop everything immediately
+    cMode=false;chatMicMode=false;
+    isSpeaking=false;
+    if(rec)try{rec.abort();}catch(e){}
+    // Cancel any ongoing speech
+    if(synth)synth.cancel();
+    if(curAudio){try{curAudio.pause();}catch(e){}curAudio=null;}
+    if(orb)orb.className='';
+    if(vb){vb.className='';vb.textContent='⬤ ACTIVATE HELIX VOICE';}
+    if(vs)vs.textContent='Click orb to activate HELIX Voice';
+    wave(false);
+  }
+  else{
+    if(!SR){showToast('❌ Browser does not support voice recognition!');return;}
+    chatMicMode=false;cMode=true;
+    if(!vOn){vOn=true;const b=document.getElementById('bv');if(b){b.className='hbtn on';b.textContent='🔊 Voice ON';}}
+    if(orb)orb.className='L';if(vb){vb.className='on';vb.textContent='🔴 HELIX ACTIVE — Click to Stop';}
+    if(vs)vs.textContent='Listening... (speak now)';
+    initAndStart();
+  }
+}
+function toggleV(){vOn=!vOn;const b=document.getElementById('bv');if(b){b.className='hbtn'+(vOn?' on':'');b.textContent=vOn?'🔊 Voice ON':'🔊 Voice';}if(!vOn&&synth)synth.cancel();showToast(vOn?'🔊 Voice output ON':'🔇 Voice output OFF');}
+// Initialize voice button as ON
+window.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('bv');if(b){b.className='hbtn on';b.textContent='🔊 Voice ON';}});
+
+/* ═══ CODE ═══ */
+function sl(el,lang){document.querySelectorAll('.lb').forEach(b=>b.className='lb');el.className='lb on';selLang=lang;}
+async function genCode(){
+  const req=document.getElementById('cr2');if(!req||!req.value.trim()){showToast('⚠️ Describe what code you need!');return;}
+  if(!gk()){sw('settings');return;}
+  const btn=document.querySelector('#p-code .actn');if(btn){btn.textContent='⏳ Generating...';btn.disabled=true;}
+  const co=document.getElementById('co');if(co){co.style.display='block';co.innerHTML='<div style="color:var(--t2);padding:20px;text-align:center">Generating '+selLang+' code...</div>';}
+  const r=await callAPI([{role:'user',content:`Write complete, working, well-commented ${selLang} code for: ${req.value.trim()}\n\nProvide: complete runnable code with comments, a brief explanation, and example usage or output.`}]);
+  if(co)co.innerHTML=render(r||'Error generating code')+`<div style="display:flex;gap:8px;margin-top:12px;"><button class="cblk-copy" style="padding:8px 14px;border-radius:8px;" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.querySelector('#co .cblk-code')?.innerText||'')">📋 Copy Code</button></div>`;
+  if(btn){btn.textContent='⚡ Generate Code';btn.disabled=false;}
+}
+
+/* ═══ IMAGE ANALYZE ═══ */
+function loadImg(input){const f=input.files[0];if(!f)return;const reader=new FileReader();reader.onload=e=>{const ip=document.getElementById('ipr');if(ip)ip.src=e.target.result;const ipa=document.getElementById('ipa');if(ipa)ipa.style.display='block';const idr=document.getElementById('idr');if(idr)idr.style.display='none';imgB64=e.target.result.split(',')[1];showToast('✅ Image loaded!');};reader.readAsDataURL(f);}
+function sit(t){const el=document.getElementById('itk');if(el)el.value=t;}
+async function anaImg(){
+  if(!imgB64){showToast('⚠️ Please upload an image first!');return;}
+  const key=gk();if(!key){sw('settings');showToast('⚠️ API key needed!');return;}
+  const task=(document.getElementById('itk')||{value:'Describe this image in complete detail'}).value||'Describe this image in complete detail';
+  const btn=document.querySelector('#analyze-panel .actn.purple');
+  if(btn){btn.textContent='🔮 Analyzing...';btn.disabled=true;}
+  const irs=document.getElementById('irs');if(irs){irs.style.display='block';irs.innerHTML='<div style="color:var(--t2);text-align:center;padding:16px">🔮 HELIX is analyzing your image...</div>';}
+  const r=await new Promise(res=>{
+    const x=new XMLHttpRequest();
+    x.open('POST','https://api.groq.com/openai/v1/chat/completions');
+    x.setRequestHeader('Content-Type','application/json');
+    x.setRequestHeader('Authorization','Bearer '+key);
+    x.timeout=22000;
+    x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));res(d.choices[0].message.content);}catch(e){res('Analysis error: '+e.message+'. Make sure your Groq API key supports vision models (meta-llama/llama-4-scout-17b-16e-instruct).');}};
+    x.onerror=()=>res('Sorry, connection error during image analysis.');
+    x.ontimeout=()=>res('Sorry, image analysis timed out. Try a smaller image.');
+    x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:900,messages:[{role:'system',content:'You are HELIX AI image analyzer, created by Pritam Bishwokarma. Analyze images thoroughly and respond in detail, in a natural conversational tone. The user\'s name is '+(getUserName()||'friend')+'.'},
+    {role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+imgB64,detail:'high'}}]}]}));
+  });
+  if(irs){irs.style.display='block';irs.innerHTML=render(r);}
+  if(btn){btn.textContent='🔮 Analyze with HELIX';btn.disabled=false;}
+}
+
+/* ═══ TOOLS HUB ═══ */
+let curStudySubj='Physics',cropB64=null,docFile=null,docFileType=null;
+
+function openTool(name){
+  document.getElementById('tools-grid').style.display='none';
+  document.querySelectorAll('.tool-detail').forEach(d=>d.className='tool-detail');
+  const el=document.getElementById('tool-'+name);if(el)el.className='tool-detail on';
+}
+function closeToolDetail(){
+  document.getElementById('tools-grid').style.display='grid';
+  document.querySelectorAll('.tool-detail').forEach(d=>d.className='tool-detail');
+}
+
+/* — Study Assistant — */
+function selSubj(el,subj){document.querySelectorAll('#tool-study .lb').forEach(b=>b.className='lb');el.className='lb on';curStudySubj=subj;}
+async function askStudy(){
+  const qEl=document.getElementById('study-q');
+  if(!qEl||!qEl.value.trim()){showToast('⚠️ Please type your question first!');return;}
+  if(!gk()){sw('settings');return;}
+  const btn=document.querySelector('#tool-study .actn');if(btn){btn.textContent='⏳ Thinking...';btn.disabled=true;}
+  const res=document.getElementById('study-result');if(res){res.style.display='block';res.innerHTML='<div style="color:var(--t2);text-align:center;padding:16px">📖 Working on it...</div>';}
+  const prompt=`You are helping a Grade 11-12 Nepali student (NEB curriculum) with ${curStudySubj}. Question/topic: ${qEl.value.trim()}\n\nProvide a clear, well-structured, step-by-step explanation appropriate for board exam preparation. Use examples where helpful. Be encouraging and educational.`;
+  const r=await callAPI([{role:'user',content:prompt}]);
+  if(res)res.innerHTML=render(r||'Could not get an answer. Please try again.');
+  if(btn){btn.textContent='📖 Get Help';btn.disabled=false;}
+}
+
+/* — Crop Disease Detector — */
+function loadCropImg(input){const f=input.files[0];if(!f)return;const reader=new FileReader();reader.onload=e=>{const img=document.getElementById('crop-img');if(img)img.src=e.target.result;document.getElementById('crop-preview').style.display='block';document.getElementById('crop-drop').style.display='none';cropB64=e.target.result.split(',')[1];showToast('✅ Photo loaded!');};reader.readAsDataURL(f);}
+async function analyzeCrop(){
+  if(!cropB64){showToast('⚠️ Please upload a crop photo first!');return;}
+  const key=gk();if(!key){sw('settings');return;}
+  const context=(document.getElementById('crop-context')||{value:''}).value;
+  const btn=document.querySelector('#tool-crop .actn');if(btn){btn.textContent='🔬 Diagnosing...';btn.disabled=true;}
+  const res=document.getElementById('crop-result');if(res){res.style.display='block';res.innerHTML='<div style="color:var(--t2);text-align:center;padding:16px">🔬 Examining the plant...</div>';}
+  const task=`You are an agricultural expert helping a Nepali farmer. Examine this crop/plant photo carefully. ${context?'Context: '+context+'. ':''}Identify: 1) the likely disease, pest, or deficiency (if any) 2) the severity 3) practical treatment steps using locally available methods/products in Nepal 4) prevention tips for future. If the plant looks healthy, say so clearly. Be practical and specific.`;
+  const r=await new Promise(resolve=>{
+    const x=new XMLHttpRequest();
+    x.open('POST','https://api.groq.com/openai/v1/chat/completions');
+    x.setRequestHeader('Content-Type','application/json');
+    x.setRequestHeader('Authorization','Bearer '+key);
+    x.timeout=22000;
+    x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));resolve(d.choices[0].message.content);}catch(e){resolve('Diagnosis error: '+e.message);}};
+    x.onerror=()=>resolve('Connection error during crop analysis.');
+    x.ontimeout=()=>resolve('Analysis timed out — try a smaller/clearer photo.');
+    x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:900,messages:[{role:'user',content:[{type:'text',text:task},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+cropB64,detail:'high'}}]}]}));
+  });
+  if(res)res.innerHTML=render(r);
+  if(btn){btn.textContent='🔬 Diagnose Crop';btn.disabled=false;}
+}
+
+/* — Career Guidance — */
+async function askCareer(){
+  const qEl=document.getElementById('career-q');
+  if(!qEl||!qEl.value.trim()){showToast('⚠️ Please tell HELIX about yourself first!');return;}
+  if(!gk()){sw('settings');return;}
+  const btn=document.querySelector('#tool-career .actn');if(btn){btn.textContent='⏳ Analyzing...';btn.disabled=true;}
+  const res=document.getElementById('career-result');if(res){res.style.display='block';res.innerHTML='<div style="color:var(--t2);text-align:center;padding:16px">🎯 Thinking about your future...</div>';}
+  const prompt=`You are a career guidance counselor familiar with the Nepali education and job market. A person shared this about themselves: "${qEl.value.trim()}"\n\nProvide: 1) 2-3 well-suited career paths with reasoning 2) relevant courses/degrees available in Nepal (or abroad if relevant) 3) practical next steps they can take now 4) realistic expectations about the field in Nepal's job market. Be encouraging but honest.`;
+  const r=await callAPI([{role:'user',content:prompt}]);
+  if(res)res.innerHTML=render(r||'Could not generate guidance. Please try again.');
+  if(btn){btn.textContent='🎯 Get Guidance';btn.disabled=false;}
+}
+
+/* — Document Analyzer — */
+function loadDocFile(input){
+  const f=input.files[0];if(!f)return;
+  const reader=new FileReader();
+  const prev=document.getElementById('doc-preview');
+  if(f.type.startsWith('image/')){
+    docFileType='image';
+    reader.onload=e=>{docFile=e.target.result.split(',')[1];if(prev){prev.style.display='block';prev.innerHTML=`<img src="${e.target.result}" style="max-width:100%;max-height:220px;border-radius:12px;border:1px solid var(--bds);"/>`;}document.getElementById('doc-drop').style.display='none';showToast('✅ Image loaded!');};
+    reader.readAsDataURL(f);
+  }else{
+    docFileType='text';
+    reader.onload=e=>{docFile=e.target.result.substring(0,6000);if(prev){prev.style.display='block';prev.innerHTML=`<div class="doc-file-chip">📄 ${f.name} (${(f.size/1024).toFixed(1)} KB)</div>`;}document.getElementById('doc-drop').style.display='none';showToast('✅ File loaded!');};
+    reader.readAsText(f);
+  }
+}
+async function analyzeDoc(){
+  if(!docFile){showToast('⚠️ Please upload a file first!');return;}
+  const key=gk();if(!key){sw('settings');return;}
+  const context=(document.getElementById('doc-context')||{value:''}).value||'Analyze this and give useful insights and recommendations.';
+  const btn=document.querySelector('#tool-doc .actn');if(btn){btn.textContent='⏳ Analyzing...';btn.disabled=true;}
+  const res=document.getElementById('doc-result');if(res){res.style.display='block';res.innerHTML='<div style="color:var(--t2);text-align:center;padding:16px">🔎 Reading through it...</div>';}
+  let r;
+  if(docFileType==='image'){
+    r=await new Promise(resolve=>{
+      const x=new XMLHttpRequest();
+      x.open('POST','https://api.groq.com/openai/v1/chat/completions');
+      x.setRequestHeader('Content-Type','application/json');
+      x.setRequestHeader('Authorization','Bearer '+key);
+      x.timeout=22000;
+      x.onload=()=>{try{const d=JSON.parse(x.responseText);if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));resolve(d.choices[0].message.content);}catch(e){resolve('Analysis error: '+e.message);}};
+      x.onerror=()=>resolve('Connection error.');
+      x.ontimeout=()=>resolve('Timed out — try a smaller file.');
+      x.send(JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',max_tokens:900,messages:[{role:'user',content:[{type:'text',text:context},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+docFile,detail:'high'}}]}]}));
+    });
+  }else{
+    r=await callAPI([{role:'user',content:`${context}\n\nDocument content:\n${docFile}`}]);
+  }
+  if(res)res.innerHTML=render(r||'Could not analyze the file. Please try again.');
+  if(btn){btn.textContent='🔎 Analyze';btn.disabled=false;}
+}
+
+/* ═══ UTILS ═══ */
+const initPH=()=>{const name=getUserName();const greetLine=name?`${getGreetingTime()}, ${name}!`:'H.E.L.I.X';const subLine=name?'How can I help you today?':'VERSION 5.9 · NEPAL EDITION · BY PRITAM BK';
+return `<div id="ph"><div id="ph-orb"><div class="ph-orbit-ring ph-orbit-ring1"></div><div class="ph-orbit-ring ph-orbit-ring2"></div><div class="ph-orbit-ring ph-orbit-ring3"></div><div class="ph-orbit-dot ph-orbit-dot1"></div><div class="ph-orbit-dot ph-orbit-dot2"></div><div class="ph-orbit-dot ph-orbit-dot3"></div><svg class="hxbw-icon hxbw-breathe" width="120" height="120" viewBox="0 0 100 100" style="position:relative;z-index:2;"><use href="#hx-logo-bw"/></svg></div><h2>${greetLine}</h2><div class="sub">${subLine}</div><div class="chips"><div class="chip" onclick="qs('176840684 * 54646953')"><span class="chip-icon">🔢</span>Big math</div><div class="chip" onclick="qs('Python calculator code लेख्नुस्')"><span class="chip-icon">⌨️</span>Write code</div><div class="chip" onclick="qs('तिमीलाई कसले बनायो?')"><span class="chip-icon">👁</span>About HELIX</div><div class="chip" onclick="sw('tools')"><span class="chip-icon">🧰</span>Explore Tools</div></div></div>`;};
+function refreshWelcomeScreen(){const ph=document.getElementById('ph');if(ph&&fst){ph.outerHTML=initPH();}}
+function clearAll(){
+  if(!confirm('Clear chat and all recent history?'))return;
+  hist=[];fst=true;
+  localStorage.removeItem('hx5rec');
+  showToast('💫 Chat & history cleared!');
+  const log=document.getElementById('log');
+  if(log)log.innerHTML=initPH();
+  // Also refresh recent panel if visible
+  const rl=document.getElementById('rl');
+  if(rl)rl.innerHTML='<div style="color:var(--t2);text-align:center;padding:40px">No recent chats yet!</div>';
+}
+
+document.getElementById('inp').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();sendMsg();}});
+document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+
+/* ═══ DARK MODE ═══ */
+function applyDarkMode(on){
+  document.body.classList.toggle('dark',on);
+  const b=document.getElementById('bdark');
+  if(b){b.textContent=on?'☀️ Light':'🌙 Dark';b.className='hbtn'+(on?' on':'');}
+  localStorage.setItem('hx5_dark',on?'1':'0');
+}
+function toggleDark(){applyDarkMode(!document.body.classList.contains('dark'));}
+(function(){if(localStorage.getItem('hx5_dark')==='1')applyDarkMode(true);})();
+
+/* ═══ EXPORT CHAT ═══ */
+function exportChat(){
+  const log=document.getElementById('log');
+  const msgs=log?Array.from(log.querySelectorAll('.msg')):[];
+  if(!msgs.length){showToast('⚠️ No messages to export yet!');return;}
+  let md='# HELIX Chat Export\n\n_Exported '+new Date().toLocaleString()+'_\n\n---\n\n';
+  msgs.forEach(m=>{
+    const bbl=m.querySelector('.bbl');if(!bbl)return;
+    const isUser=bbl.classList.contains('u'),isSys=bbl.classList.contains('sys');
+    const who=isUser?'**You**':(isSys?'_System_':'**HELIX**');
+    const text=bbl.innerText.trim();
+    if(!text)return;
+    md+=who+':\n\n'+text+'\n\n---\n\n';
+  });
+  const blob=new Blob([md],{type:'text/markdown'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='helix-chat-'+Date.now()+'.md';
+  document.body.appendChild(a);a.click();a.remove();
+  URL.revokeObjectURL(url);
+  showToast('⬇️ Chat exported!');
+}
+
+/* ═══ KEYBOARD SHORTCUTS ═══ */
+document.addEventListener('keydown',function(e){
+  const tag=document.activeElement?document.activeElement.tagName:'';
+  const typing=tag==='INPUT'||tag==='TEXTAREA';
+  // '/' focuses chat input from anywhere (when not already typing)
+  if(e.key==='/'&&!typing){
+    e.preventDefault();
+    sw('chat');
+    const inp=document.getElementById('inp');
+    if(inp)inp.focus();
+    return;
+  }
+  // Ctrl/Cmd+Enter sends the message from anywhere
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    e.preventDefault();
+    sendMsg();
+    return;
+  }
+  // Esc: stop generation, or cancel an open edit, or blur focus
+  if(e.key==='Escape'){
+    if(generating){stopGenerating();return;}
+    const activeEdit=document.querySelector('.bbl[data-orig]');
+    if(activeEdit){const cancelBtn=activeEdit.querySelector('.edit-cancel');if(cancelBtn)cancelEditMsg(cancelBtn);return;}
+    if(typing&&document.activeElement.blur)document.activeElement.blur();
+  }
+});
+</script>
+</body>
+</html>
